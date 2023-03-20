@@ -1,7 +1,12 @@
+# frozen_string_literal: true
+
 require 'uri_template'
 
 module OpenapiParameters
+  # Parses OpenAPI path parameters from path template strings and the request path.
   class Path
+    # @param parameters [Array<Hash>] The OpenAPI path parameters.
+    # @param path [String] The OpenAPI path template string.
     def initialize(parameters, path)
       @parameters = parameters
       @path = path
@@ -14,9 +19,8 @@ module OpenapiParameters
       parameters.each_with_object(parsed_path) do |parameter, result|
         param = Parameter.new(parameter)
         next unless parsed_path.key?(param.name)
-        if param.object? && result[param.name].is_a?(Array)
-          result[param.name] = array_to_hash(result[param.name])
-        end
+
+        result[param.name] = array_to_hash(result[param.name]) if param.object? && result[param.name].is_a?(Array)
       end
     end
 
@@ -26,12 +30,12 @@ module OpenapiParameters
           path = @path.dup
           parameters.each do |p|
             param = Parameter.new(p)
-            if param.array? || param.object?
-              path.gsub!(
-                "{#{param.name}}",
-                "{#{operator(param)}#{param.name}#{modifier(param)}}",
-              )
-            end
+            next unless param.array? || param.object?
+
+            path.gsub!(
+              "{#{param.name}}",
+              "{#{operator(param)}#{param.name}#{modifier(param)}}"
+            )
           end
           path
         end
@@ -40,13 +44,12 @@ module OpenapiParameters
     private
 
     def array_to_hash(array)
-
       return array if array&.length&.odd?
 
       Hash[*array]
     end
 
-    LIST_OPS = { 'simple' => nil, 'label' => '.', 'matrix' => ';' }
+    LIST_OPS = { 'simple' => nil, 'label' => '.', 'matrix' => ';' }.freeze
     private_constant :LIST_OPS
 
     def operator(param)

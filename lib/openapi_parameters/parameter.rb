@@ -23,7 +23,7 @@ module OpenapiParameters
       definition['in']
     end
 
-    alias_method :in, :location
+    alias in location
 
     def schema
       return definition.dig('content', media_type, 'schema') if media_type
@@ -82,7 +82,7 @@ module OpenapiParameters
       'query' => 'form',
       'path' => 'simple',
       'header' => 'simple',
-      'cookie' => 'form',
+      'cookie' => 'form'
     }.freeze
     private_constant :DEFAULT_STYLE
 
@@ -96,10 +96,11 @@ module OpenapiParameters
         raise NotSupportedError,
               "Parameter schema with $ref is not supported: #{definition.inspect}"
       end
-      unless VALID_LOCATIONS.include?(definition['in'])
-        raise ArgumentError,
-              "Parameter definition must have an 'in' property defined which should be one of #{VALID_LOCATIONS.join(', ')}"
-      end
+      return if VALID_LOCATIONS.include?(definition['in'])
+
+      raise ArgumentError,
+            %(Parameter definition must have an 'in' property defined
+               which should be one of #{VALID_LOCATIONS.join(', ')}).freeze
     end
   end
 end

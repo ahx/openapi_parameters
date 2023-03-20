@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name = 'OpenapiParameters'
   spec.version = OpenapiParameters::VERSION
   spec.authors = ['Andreas Haller']
-  spec.email = ['andreas.haller@invision.de']
+  spec.email = ['andreas.haller@posteo.de']
 
   spec.summary = 'OpenapiParameters is an OpenAPI aware parameter parser'
   spec.description =
@@ -37,11 +37,11 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_dependency "rack", "~> 3.0"
-  spec.add_dependency "uri_template", ">= 0.7", "< 2.0"
-  spec.add_dependency "zeitwerk", "~> 2.6"
+  spec.add_dependency 'rack', '~> 3.0'
+  spec.add_dependency 'uri_template', '>= 0.7', '< 2.0'
+  spec.add_dependency 'zeitwerk', '~> 2.6'
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
-spec.metadata['rubygems_mfa_required'] = 'true'
+  spec.metadata['rubygems_mfa_required'] = 'true'
 end

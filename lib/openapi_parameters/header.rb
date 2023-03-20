@@ -1,13 +1,19 @@
+# frozen_string_literal: true
+
 module OpenapiParameters
+  # Header parses OpenAPI parameters from the request headers.
   class Header
+    # @param parameters [Array<Hash>] The OpenAPI parameters
     def initialize(parameters)
       @parameters = parameters
     end
 
+    # @param headers [Hash] The headers from the request. Use HeadersHash to convert a Rack env to a Hash.
     def unpack(headers)
       parameters.each_with_object({}) do |parameter, result|
         parameter = Parameter.new(parameter)
         next unless headers.key?(parameter.name)
+
         result[parameter.name] = unpack_parameter(parameter, headers)
       end
     end
@@ -31,7 +37,7 @@ module OpenapiParameters
       value.split(ARRAY_DELIMER)
     end
 
-    ARRAY_DELIMER = ','.freeze
+    ARRAY_DELIMER = ','
     OBJECT_EXPLODE_SPLITTER = Regexp.union(',', '=').freeze
 
     def unpack_object(parameter, value)
@@ -42,6 +48,7 @@ module OpenapiParameters
           value.split(ARRAY_DELIMER)
         end
       return value if entries.length.odd?
+
       Hash[*entries]
     end
   end

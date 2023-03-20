@@ -1,12 +1,6 @@
 require:
   - rubocop-rspec
 
-Style:
-  Enabled: false
-
-Layout:
-  Enabled: false
-
 Naming/MethodParameterName:
   Enabled: false
 

@@ -11,11 +11,11 @@ RSpec.describe OpenapiParameters::Parameter do
         'in' => 'query',
         'name' => 'id',
         'schema' => {
-          '$ref' => '#/components/schemas/Pet',
-        },
+          '$ref' => '#/components/schemas/Pet'
+        }
       }
       expect { described_class.new(definition) }.to raise_error(
-        OpenapiParameters::NotSupportedError,
+        OpenapiParameters::NotSupportedError
       )
     end
   end
@@ -50,8 +50,8 @@ RSpec.describe OpenapiParameters::Parameter do
         'in' => 'query',
         'name' => 'id',
         'schema' => {
-          'type' => 'string',
-        },
+          'type' => 'string'
+        }
       }
       subject = described_class.new(definition)
       expect(subject.schema).to eq({ 'type' => 'string' })
@@ -62,15 +62,15 @@ RSpec.describe OpenapiParameters::Parameter do
         described_class.new(
           'in' => 'query',
           'schema' => {
-            'type' => 'string',
+            'type' => 'string'
           },
           'content' => {
             'application/json' => {
               'schema' => {
-                'type' => 'integer',
-              },
-            },
-          },
+                'type' => 'integer'
+              }
+            }
+          }
         )
       expect(parameter.schema).to eq({ 'type' => 'integer' })
     end
@@ -85,7 +85,7 @@ RSpec.describe OpenapiParameters::Parameter do
     it 'returns true if type is string' do
       parameter =
         described_class.new(
-          { 'in' => 'query', 'schema' => { 'type' => 'string' } },
+          { 'in' => 'query', 'schema' => { 'type' => 'string' } }
         )
       expect(parameter.primitive?).to be true
     end
@@ -93,7 +93,7 @@ RSpec.describe OpenapiParameters::Parameter do
     it 'returns true if type is integer' do
       parameter =
         described_class.new(
-          { 'in' => 'query', 'schema' => { 'type' => 'integer' } },
+          { 'in' => 'query', 'schema' => { 'type' => 'integer' } }
         )
       expect(parameter.primitive?).to be true
     end
@@ -101,7 +101,7 @@ RSpec.describe OpenapiParameters::Parameter do
     it 'returns true if type is number' do
       parameter =
         described_class.new(
-          { 'in' => 'query', 'schema' => { 'type' => 'number' } },
+          { 'in' => 'query', 'schema' => { 'type' => 'number' } }
         )
       expect(parameter.primitive?).to be true
     end
@@ -109,7 +109,7 @@ RSpec.describe OpenapiParameters::Parameter do
     it 'returns false if type is array' do
       parameter =
         described_class.new(
-          { 'in' => 'query', 'schema' => { 'type' => 'array' } },
+          { 'in' => 'query', 'schema' => { 'type' => 'array' } }
         )
       expect(parameter.primitive?).to be false
     end
@@ -117,7 +117,7 @@ RSpec.describe OpenapiParameters::Parameter do
     it 'returns false if type is object' do
       parameter =
         described_class.new(
-          { 'in' => 'query', 'schema' => { 'type' => 'object' } },
+          { 'in' => 'query', 'schema' => { 'type' => 'object' } }
         )
       expect(parameter.primitive?).to be false
     end
@@ -127,7 +127,7 @@ RSpec.describe OpenapiParameters::Parameter do
     it 'returns true if type is array' do
       parameter =
         described_class.new(
-          { 'in' => 'query', 'schema' => { 'type' => 'array' } },
+          { 'in' => 'query', 'schema' => { 'type' => 'array' } }
         )
       expect(parameter.array?).to be true
     end
@@ -135,7 +135,7 @@ RSpec.describe OpenapiParameters::Parameter do
     it 'returns false if type is not array' do
       parameter =
         described_class.new(
-          { 'in' => 'query', 'schema' => { 'type' => 'string' } },
+          { 'in' => 'query', 'schema' => { 'type' => 'string' } }
         )
       expect(parameter.array?).to be false
     end
@@ -145,7 +145,7 @@ RSpec.describe OpenapiParameters::Parameter do
     it 'returns true if type is object' do
       parameter =
         described_class.new(
-          { 'in' => 'query', 'schema' => { 'type' => 'object' } },
+          { 'in' => 'query', 'schema' => { 'type' => 'object' } }
         )
       expect(parameter.object?).to be true
     end
@@ -153,7 +153,7 @@ RSpec.describe OpenapiParameters::Parameter do
     it 'returns false if type is not object' do
       parameter =
         described_class.new(
-          { 'in' => 'query', 'schema' => { 'type' => 'string' } },
+          { 'in' => 'query', 'schema' => { 'type' => 'string' } }
         )
       expect(parameter.object?).to be false
     end
@@ -260,10 +260,10 @@ RSpec.describe OpenapiParameters::Parameter do
           'content' => {
             'application/json' => {
               'schema' => {
-                'type' => 'string',
-              },
-            },
-          },
+                'type' => 'string'
+              }
+            }
+          }
         )
       expect(parameter.media_type).to eq 'application/json'
     end

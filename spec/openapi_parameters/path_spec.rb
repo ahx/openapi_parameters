@@ -3,7 +3,6 @@
 require_relative '../../lib/openapi_parameters/path'
 
 RSpec.describe OpenapiParameters::Path do
-
   describe '#unpack' do
     let(:path) { '/pets/{id}' }
 
@@ -14,8 +13,8 @@ RSpec.describe OpenapiParameters::Path do
           'in' => 'path',
           'name' => 'id',
           'schema' => {
-            'type' => 'integer',
-          },
+            'type' => 'integer'
+          }
         }
         params = described_class.new([parameter], path).unpack('/pets/12')
         expect(params).to eq('id' => '12')
@@ -28,13 +27,13 @@ RSpec.describe OpenapiParameters::Path do
             'in' => 'path',
             'name' => 'year',
             'schema' => {
-              'type' => 'integer',
-            },
-          },
+              'type' => 'integer'
+            }
+          }
         ]
         params =
           described_class.new(parameters, '/pets/{id}/schedule/{year}').unpack(
-            '/pets/12/schedule/2022',
+            '/pets/12/schedule/2022'
           )
         expect(params).to eq('id' => '12', 'year' => '2022')
       end
@@ -47,8 +46,8 @@ RSpec.describe OpenapiParameters::Path do
           'name' => 'id',
           'explode' => true,
           'schema' => {
-            'type' => 'array',
-          },
+            'type' => 'array'
+          }
         }
         value = described_class.new([parameter], '/pets/{id}').unpack('/pets/1,2')
         expect(value).to eq('id' => %w[1 2])
@@ -60,8 +59,8 @@ RSpec.describe OpenapiParameters::Path do
           'name' => 'id',
           'explode' => true,
           'schema' => {
-            'type' => 'array',
-          },
+            'type' => 'array'
+          }
         }
         value = described_class.new([parameter], '/pets/{id}').unpack('/pets')
         expect(value).to eq({})
@@ -74,8 +73,8 @@ RSpec.describe OpenapiParameters::Path do
           'style' => 'simple',
           'explode' => true,
           'schema' => {
-            'type' => 'array',
-          },
+            'type' => 'array'
+          }
         }
         value = described_class.new([parameter], '/pets/{id}').unpack('/pets/1,2')
         expect(value).to eq('id' => %w[1 2])
@@ -88,12 +87,12 @@ RSpec.describe OpenapiParameters::Path do
           'explode' => true,
           'style' => 'label',
           'schema' => {
-            'type' => 'array',
-          },
+            'type' => 'array'
+          }
         }
         value =
           described_class.new([parameter], '/pets/{color}').unpack(
-            '/pets/.blue.black.brown',
+            '/pets/.blue.black.brown'
           )
         expect(value).to eq('color' => %w[blue black brown])
       end
@@ -105,12 +104,12 @@ RSpec.describe OpenapiParameters::Path do
           'explode' => true,
           'style' => 'matrix',
           'schema' => {
-            'type' => 'array',
-          },
+            'type' => 'array'
+          }
         }
         value =
           described_class.new([parameter], '/pets/{color}').unpack(
-            '/pets/;color=blue;color=black;color=brown',
+            '/pets/;color=blue;color=black;color=brown'
           )
         expect(value).to eq('color' => %w[blue black brown])
       end
@@ -123,8 +122,8 @@ RSpec.describe OpenapiParameters::Path do
           'name' => 'id',
           'explode' => false,
           'schema' => {
-            'type' => 'array',
-          },
+            'type' => 'array'
+          }
         }
         value = described_class.new([parameter], '/pets/{id}').unpack('/pets/1,2')
         expect(value).to eq('id' => %w[1 2])
@@ -137,8 +136,8 @@ RSpec.describe OpenapiParameters::Path do
           'style' => 'simple',
           'explode' => false,
           'schema' => {
-            'type' => 'array',
-          },
+            'type' => 'array'
+          }
         }
         value = described_class.new([parameter], '/pets/{id}').unpack('/pets/1,2')
         expect(value).to eq('id' => %w[1 2])
@@ -151,8 +150,8 @@ RSpec.describe OpenapiParameters::Path do
           'explode' => true,
           'style' => 'label',
           'schema' => {
-            'type' => 'array',
-          },
+            'type' => 'array'
+          }
         }
         value =
           described_class.new([parameter], '/pets/{id}').unpack('/pets/.1.2')
@@ -166,12 +165,12 @@ RSpec.describe OpenapiParameters::Path do
           'explode' => false,
           'style' => 'matrix',
           'schema' => {
-            'type' => 'array',
-          },
+            'type' => 'array'
+          }
         }
         value =
           described_class.new([parameter], '/pets/{color}').unpack(
-            '/pets/;color=blue,black,brown',
+            '/pets/;color=blue,black,brown'
           )
         expect(value).to eq('color' => %w[blue black brown])
       end
@@ -184,19 +183,19 @@ RSpec.describe OpenapiParameters::Path do
           'name' => 'color',
           'explode' => true,
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value =
           described_class.new([parameter], '/pets/{color}').unpack(
-            '/pets/R=100,G=200,B=150',
+            '/pets/R=100,G=200,B=150'
           )
         expect(value).to eq(
           'color' => {
             'R' => '100',
             'G' => '200',
-            'B' => '150',
-          },
+            'B' => '150'
+          }
         )
       end
 
@@ -206,8 +205,8 @@ RSpec.describe OpenapiParameters::Path do
           'name' => 'id',
           'explode' => true,
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value = described_class.new([parameter], '/pets/{id}').unpack('/pets')
         expect(value).to eq({})
@@ -220,19 +219,19 @@ RSpec.describe OpenapiParameters::Path do
           'explode' => true,
           'style' => 'simple',
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value =
           described_class.new([parameter], '/pets/{color}').unpack(
-            '/pets/R=100,G=200,B=150',
+            '/pets/R=100,G=200,B=150'
           )
         expect(value).to eq(
           'color' => {
             'R' => '100',
             'G' => '200',
-            'B' => '150',
-          },
+            'B' => '150'
+          }
         )
       end
 
@@ -243,19 +242,19 @@ RSpec.describe OpenapiParameters::Path do
           'explode' => true,
           'style' => 'simple',
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value =
           described_class.new([parameter], '/pets/{color}').unpack(
-            '/pets/R=100,G200,B=150',
+            '/pets/R=100,G200,B=150'
           )
         expect(value).to eq(
           'color' => {
             'B' => '150',
             'G200' => nil,
-            'R' => '100',
-          },
+            'R' => '100'
+          }
         )
       end
     end
@@ -266,19 +265,19 @@ RSpec.describe OpenapiParameters::Path do
           'in' => 'path',
           'name' => 'color',
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value =
           described_class.new([parameter], '/pets/{color}').unpack(
-            '/pets/R,100,G,200,B,150',
+            '/pets/R,100,G,200,B,150'
           )
         expect(value).to eq(
           'color' => {
             'R' => '100',
             'G' => '200',
-            'B' => '150',
-          },
+            'B' => '150'
+          }
         )
       end
 
@@ -288,12 +287,12 @@ RSpec.describe OpenapiParameters::Path do
           'name' => 'color',
           'style' => 'simple',
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value =
           described_class.new([parameter], '/pets/{color}').unpack(
-            '/pets/R,100,G200,B,150',
+            '/pets/R,100,G200,B,150'
           )
         expect(value).to eq('color' => %w[R 100 G200 B 150])
       end
@@ -305,19 +304,19 @@ RSpec.describe OpenapiParameters::Path do
           'explode' => false,
           'style' => 'simple',
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value =
           described_class.new([parameter], '/pets/{color}').unpack(
-            '/pets/R,100,G,200,B,150',
+            '/pets/R,100,G,200,B,150'
           )
         expect(value).to eq(
           'color' => {
             'R' => '100',
             'G' => '200',
-            'B' => '150',
-          },
+            'B' => '150'
+          }
         )
       end
 
@@ -328,19 +327,19 @@ RSpec.describe OpenapiParameters::Path do
           'explode' => false,
           'style' => 'matrix',
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value =
           described_class.new([parameter], '/pets/{color}').unpack(
-            '/pets/;color=R,100,G,200,B,150',
+            '/pets/;color=R,100,G,200,B,150'
           )
         expect(value).to eq(
           'color' => {
             'R' => '100',
             'G' => '200',
-            'B' => '150',
-          },
+            'B' => '150'
+          }
         )
       end
 
@@ -351,19 +350,19 @@ RSpec.describe OpenapiParameters::Path do
           'explode' => false,
           'style' => 'label',
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value =
           described_class.new([parameter], '/pets/{color}').unpack(
-            '/pets/.R,100,G,200,B,150',
+            '/pets/.R,100,G,200,B,150'
           )
         expect(value).to eq(
           'color' => {
             'R' => '100',
             'G' => '200',
-            'B' => '150',
-          },
+            'B' => '150'
+          }
         )
       end
     end

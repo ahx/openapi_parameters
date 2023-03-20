@@ -34,8 +34,8 @@ RSpec.describe OpenapiParameters::Cookie do
           'in' => 'cookie',
           'name' => 'Some',
           'schema' => {
-            'type' => 'integer',
-          },
+            'type' => 'integer'
+          }
         }
         value = described_class.new([parameter]).unpack(cookies)
         expect(value).to eq('Some' => '12')
@@ -47,8 +47,8 @@ RSpec.describe OpenapiParameters::Cookie do
           'in' => 'cookie',
           'name' => 'Some',
           'schema' => {
-            'type' => 'integer',
-          },
+            'type' => 'integer'
+          }
         }
         value = described_class.new([parameter]).unpack(cookies)
         expect(value).to eq({})
@@ -60,8 +60,8 @@ RSpec.describe OpenapiParameters::Cookie do
           'in' => 'cookie',
           'name' => '[]some[things]%',
           'schema' => {
-            'type' => 'integer',
-          },
+            'type' => 'integer'
+          }
         }
         value = described_class.new([parameter]).unpack(cookies)
         expect(value).to eq('[]some[things]%' => '12')
@@ -69,7 +69,7 @@ RSpec.describe OpenapiParameters::Cookie do
     end
 
     describe 'Array explode true' do
-      # NOTE: Nobody seems to understand how explode: true (which is the default) should work for arrays in cookie parameters.
+      # NOTE: Nobody seems to understand how explode: true should work for arrays in cookie parameters.
       # So this library just ignores the explode flag for arrays.
       it 'returns an array' do
         cookies = 'Some=1,2;'
@@ -78,8 +78,8 @@ RSpec.describe OpenapiParameters::Cookie do
           'name' => 'Some',
           'explode' => true,
           'schema' => {
-            'type' => 'array',
-          },
+            'type' => 'array'
+          }
         }
         value = described_class.new([parameter]).unpack(cookies)
         expect(value).to eq('Some' => %w[1 2])
@@ -94,8 +94,8 @@ RSpec.describe OpenapiParameters::Cookie do
           'name' => 'Some',
           'explode' => false,
           'schema' => {
-            'type' => 'array',
-          },
+            'type' => 'array'
+          }
         }
         value = described_class.new([parameter]).unpack(cookies)
         expect(value).to eq('Some' => %w[1 2])
@@ -108,8 +108,8 @@ RSpec.describe OpenapiParameters::Cookie do
           'name' => 'Some',
           'explode' => false,
           'schema' => {
-            'type' => 'array',
-          },
+            'type' => 'array'
+          }
         }
         value = described_class.new([parameter]).unpack(cookies)
         expect(value).to eq({})
@@ -117,7 +117,7 @@ RSpec.describe OpenapiParameters::Cookie do
     end
 
     describe 'Object explode true' do
-      # NOTE: Nobody seems to understand how explode: true (which is the default) should work for objects in cookie parameters.
+      # NOTE: Nobody seems to understand how explode: true should work
       # So this library just ignores the explode flag for objects.
 
       it 'applies the "form" style by default' do
@@ -127,16 +127,16 @@ RSpec.describe OpenapiParameters::Cookie do
           'name' => 'Some',
           'explode' => true,
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value = described_class.new([parameter]).unpack(cookies)
         expect(value).to eq(
           'Some' => {
             'R' => '100',
             'G' => '200',
-            'B' => '150',
-          },
+            'B' => '150'
+          }
         )
       end
 
@@ -147,8 +147,8 @@ RSpec.describe OpenapiParameters::Cookie do
           'name' => 'Some',
           'explode' => true,
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value = described_class.new([parameter]).unpack(cookies)
         expect(value).to eq({})
@@ -162,16 +162,16 @@ RSpec.describe OpenapiParameters::Cookie do
           'explode' => true,
           'style' => 'form',
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value = described_class.new([parameter]).unpack(cookies)
         expect(value).to eq(
           'Some' => {
             'R' => '100',
             'G' => '200',
-            'B' => '150',
-          },
+            'B' => '150'
+          }
         )
       end
 
@@ -182,8 +182,8 @@ RSpec.describe OpenapiParameters::Cookie do
           'name' => 'Some',
           'explode' => true,
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value = described_class.new([parameter]).unpack(cookies)
         expect(value).to eq('Some' => 'R=100,G200,B=150')
@@ -197,16 +197,16 @@ RSpec.describe OpenapiParameters::Cookie do
           'in' => 'cookie',
           'name' => 'Some',
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value = described_class.new([parameter]).unpack(cookies)
         expect(value).to eq(
           'Some' => {
             'R' => '100',
             'G' => '200',
-            'B' => '150',
-          },
+            'B' => '150'
+          }
         )
       end
 
@@ -216,8 +216,8 @@ RSpec.describe OpenapiParameters::Cookie do
           'in' => 'cookie',
           'name' => 'Some',
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value = described_class.new([parameter]).unpack(cookies)
         expect(value).to eq('Some' => 'R,100,G200,B,150')
@@ -231,16 +231,16 @@ RSpec.describe OpenapiParameters::Cookie do
           'explode' => false,
           'style' => 'simple',
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value = described_class.new([parameter]).unpack(cookies)
         expect(value).to eq(
           'Some' => {
             'R' => '100',
             'G' => '200',
-            'B' => '150',
-          },
+            'B' => '150'
+          }
         )
       end
     end

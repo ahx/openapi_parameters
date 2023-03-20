@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 require 'rack'
 
 module OpenapiParameters
+  # Query parses query parameters from a http query strings.
   class Query
     def initialize(parameters)
       @parameters = parameters
@@ -14,9 +17,11 @@ module OpenapiParameters
         if parameter.style == 'deepObject' && parameter.object?
           parsed_nested_query = Rack::Utils.parse_nested_query(query_string)
           next unless parsed_nested_query.key?(parameter.name)
+
           result[parameter.name] = parsed_nested_query[parameter.name]
         else
           next unless parsed_query.key?(parameter.name)
+
           result[parameter.name] = unpack_parameter(parameter, parsed_query)
         end
       end
@@ -26,8 +31,8 @@ module OpenapiParameters
 
     private
 
-    QUERY_PARAMETER_DELIMETER = '&'.freeze
-    ARRAY_DELIMER = ','.freeze
+    QUERY_PARAMETER_DELIMETER = '&'
+    ARRAY_DELIMER = ','
 
     def unpack_parameter(parameter, parsed_query)
       return parsed_query[parameter.name] if parameter.primitive?
@@ -38,9 +43,9 @@ module OpenapiParameters
     def unpack_array(parameter, parsed_query)
       return parsed_query[parameter.name] if parameter.explode?
 
-      unless parameter.explode?
-        parsed_query[parameter.name].split(array_delimiter(parameter.style))
-      end
+      return if parameter.explode?
+
+      parsed_query[parameter.name].split(array_delimiter(parameter.style))
     end
 
     def unpack_object(parameter, parsed_query)
@@ -48,6 +53,7 @@ module OpenapiParameters
 
       array = parsed_query[parameter.name]&.split(ARRAY_DELIMER)
       return array if array.length.odd?
+
       Hash[*array]
     end
 
@@ -55,7 +61,7 @@ module OpenapiParameters
       'pipeDelimited' => '|',
       'spaceDelimited' => ' ',
       'form' => ',',
-      'simple' => ',',
+      'simple' => ','
     }.freeze
 
     def array_delimiter(style)

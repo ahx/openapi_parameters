@@ -1,16 +1,22 @@
+# frozen_string_literal: true
+
 require 'rack'
 
 module OpenapiParameters
+  # Cookie parses OpenAPI cookie parameters from a cookie string.
   class Cookie
+    # @param parameters [Array<Hash>] The OpenAPI parameter definitions.
     def initialize(parameters)
       @parameters = parameters
     end
 
+    # @param cookie_string [String] The cookie string from the request. Example "foo=bar; baz=qux"
     def unpack(cookie_string)
       cookies = Rack::Utils.parse_cookies_header(cookie_string)
       parameters.each_with_object({}) do |parameter, result|
         parameter = Parameter.new(parameter)
         next unless cookies.key?(parameter.name)
+
         result[parameter.name] = unpack_parameter(parameter, cookies)
       end
     end
@@ -32,7 +38,7 @@ module OpenapiParameters
       value.split(ARRAY_DELIMER)
     end
 
-    ARRAY_DELIMER = ','.freeze
+    ARRAY_DELIMER = ','
     OBJECT_EXPLODE_SPLITTER = Regexp.union(',', '=').freeze
 
     def unpack_object(parameter, value)
@@ -43,6 +49,7 @@ module OpenapiParameters
           value.split(ARRAY_DELIMER)
         end
       return value if entries.length.odd?
+
       Hash[*entries]
     end
   end

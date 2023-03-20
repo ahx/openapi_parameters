@@ -4,7 +4,6 @@ require_relative '../../lib/openapi_parameters/query'
 
 RSpec.describe OpenapiParameters::Query do
   describe '#unpack' do
-
     it 'returns a string value if no type is defined' do
       parameter = { 'in' => 'query', 'name' => 'id' }
       value = described_class.new([parameter]).unpack('id=abc')
@@ -16,8 +15,8 @@ RSpec.describe OpenapiParameters::Query do
         'in' => 'query',
         'name' => 'id',
         'schema' => {
-          'type' => 'string',
-        },
+          'type' => 'string'
+        }
       }
       value = described_class.new([parameter]).unpack('id=abc&unknown=xyz')
       expect(value).to eq('id' => 'abc')
@@ -29,8 +28,8 @@ RSpec.describe OpenapiParameters::Query do
           'in' => 'query',
           'name' => 'id',
           'schema' => {
-            'type' => 'string',
-          },
+            'type' => 'string'
+          }
         }
         value = described_class.new([parameter]).unpack('id=abc')
         expect(value).to eq('id' => 'abc')
@@ -41,8 +40,8 @@ RSpec.describe OpenapiParameters::Query do
           'in' => 'query',
           'name' => 'id',
           'schema' => {
-            'type' => 'string',
-          },
+            'type' => 'string'
+          }
         }
         value = described_class.new([parameter]).unpack('')
         expect(value).to eq({})
@@ -53,8 +52,8 @@ RSpec.describe OpenapiParameters::Query do
           'in' => 'query',
           'name' => 'pet-id',
           'schema' => {
-            'type' => 'string',
-          },
+            'type' => 'string'
+          }
         }
         value = described_class.new([parameter]).unpack('pet-id=abc')
         expect(value).to eq('pet-id' => 'abc')
@@ -66,8 +65,8 @@ RSpec.describe OpenapiParameters::Query do
           'in' => 'query',
           'name' => 'filter[name]',
           'schema' => {
-            'type' => 'string',
-          },
+            'type' => 'string'
+          }
         }
         value = described_class.new([parameter]).unpack(query_string)
         expect(value).to eq('filter[name]' => 'abc')
@@ -79,8 +78,8 @@ RSpec.describe OpenapiParameters::Query do
           'in' => 'query',
           'name' => 'x[[]abc]',
           'schema' => {
-            'type' => 'string',
-          },
+            'type' => 'string'
+          }
         }
         value = described_class.new([parameter]).unpack(query_string)
         expect(value).to eq('x[[]abc]' => 'abc')
@@ -96,9 +95,9 @@ RSpec.describe OpenapiParameters::Query do
           'schema' => {
             'type' => 'array',
             'items' => {
-              'type' => 'string',
-            },
-          },
+              'type' => 'string'
+            }
+          }
         }
         value = described_class.new([parameter]).unpack(query_string)
         expect(value).to eq('name' => %w[a b c])
@@ -114,9 +113,9 @@ RSpec.describe OpenapiParameters::Query do
           'schema' => {
             'type' => 'array',
             'items' => {
-              'type' => 'string',
-            },
-          },
+              'type' => 'string'
+            }
+          }
         }
         value = described_class.new([parameter]).unpack(query_string)
         expect(value).to eq('name' => %w[a b c])
@@ -132,9 +131,9 @@ RSpec.describe OpenapiParameters::Query do
           'schema' => {
             'type' => 'array',
             'items' => {
-              'type' => 'string',
-            },
-          },
+              'type' => 'string'
+            }
+          }
         }
         value = described_class.new([parameter]).unpack(query_string)
         expect(value).to eq('names[]' => %w[a b c])
@@ -152,9 +151,9 @@ RSpec.describe OpenapiParameters::Query do
           'schema' => {
             'type' => 'array',
             'items' => {
-              'type' => 'string',
-            },
-          },
+              'type' => 'string'
+            }
+          }
         }
         value = described_class.new([parameter]).unpack(query_string)
         expect(value).to eq('name' => %w[a b c])
@@ -170,9 +169,9 @@ RSpec.describe OpenapiParameters::Query do
           'schema' => {
             'type' => 'array',
             'items' => {
-              'type' => 'string',
-            },
-          },
+              'type' => 'string'
+            }
+          }
         }
         value = described_class.new([parameter]).unpack(query_string)
         expect(value).to eq('name' => %w[a b c])
@@ -188,9 +187,9 @@ RSpec.describe OpenapiParameters::Query do
           'schema' => {
             'type' => 'array',
             'items' => {
-              'type' => 'string',
-            },
-          },
+              'type' => 'string'
+            }
+          }
         }
         value = described_class.new([parameter]).unpack(query_string)
         expect(value).to eq('name' => %w[a b c])
@@ -208,16 +207,16 @@ RSpec.describe OpenapiParameters::Query do
             'type' => 'object',
             'properties' => {
               'R' => {
-                'type' => 'integer',
+                'type' => 'integer'
               },
               'G' => {
-                'type' => 'integer',
+                'type' => 'integer'
               },
               'B' => {
-                'type' => 'integer',
-              },
-            },
-          },
+                'type' => 'integer'
+              }
+            }
+          }
         }
       end
 
@@ -228,8 +227,8 @@ RSpec.describe OpenapiParameters::Query do
           'color' => {
             'R' => '100',
             'G' => '200',
-            'B' => '150',
-          },
+            'B' => '150'
+          }
         )
       end
 
@@ -251,24 +250,24 @@ RSpec.describe OpenapiParameters::Query do
             'type' => 'object',
             'properties' => {
               'R' => {
-                'type' => 'integer',
+                'type' => 'integer'
               },
               'G' => {
-                'type' => 'integer',
+                'type' => 'integer'
               },
               'B' => {
-                'type' => 'integer',
-              },
-            },
-          },
+                'type' => 'integer'
+              }
+            }
+          }
         }
         value = described_class.new([parameter]).unpack(query_string)
         expect(value).to eq(
           'color' => {
             'R' => '100',
             'G' => '200',
-            'B' => '150',
-          },
+            'B' => '150'
+          }
         )
       end
     end

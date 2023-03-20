@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module OpenapiParameters
   ##
   # Tries to convert a request parameter value (string) to the type specified in the JSON Schema.
@@ -23,6 +25,7 @@ module OpenapiParameters
     def convert(value, schema)
       check_supported!(schema)
       return if value.nil?
+
       case type(schema)
       when 'integer'
         Integer(value)
@@ -40,10 +43,10 @@ module OpenapiParameters
     end
 
     def check_supported!(schema)
-      if schema && schema.key?('$ref')
-        raise NotSupportedError,
-              "$ref is not supported: #{@root_schema.inspect}"
-      end
+      return unless schema&.key?('$ref')
+
+      raise NotSupportedError,
+            "$ref is not supported: #{@root_schema.inspect}"
     end
 
     def type(schema)
@@ -59,20 +62,19 @@ module OpenapiParameters
     def convert_array(array, schema)
       item_schema = schema['items']
       prefix_schemas = schema['prefixItems']
-      if prefix_schemas
-        return convert_array_with_prefixes(array, prefix_schemas, item_schema)
-      end
+      return convert_array_with_prefixes(array, prefix_schemas, item_schema) if prefix_schemas
+
       array.map { |item| convert(item, item_schema) }
     end
 
     def convert_array_with_prefixes(array, prefix_schemas, item_schema)
       prefixes =
         array
-          .slice(0, prefix_schemas.size)
-          .each_with_index
-          .map { |item, index| convert(item, prefix_schemas[index]) }
+        .slice(0, prefix_schemas.size)
+        .each_with_index
+        .map { |item, index| convert(item, prefix_schemas[index]) }
       array =
-        array[prefix_schemas.size..-1].map! do |item|
+        array[prefix_schemas.size..].map! do |item|
           convert(item, item_schema)
         end
       prefixes + array

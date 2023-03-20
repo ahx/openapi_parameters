@@ -52,8 +52,8 @@ RSpec.describe OpenapiParameters::Converter do
       described_class.call(
         '2020-09-15',
         'type' => 'string',
-        'format' => 'date',
-      ),
+        'format' => 'date'
+      )
     ).to eq('2020-09-15')
   end
 
@@ -62,9 +62,9 @@ RSpec.describe OpenapiParameters::Converter do
       'type' => 'object',
       'properties' => {
         'id' => {
-          'type' => 'integer',
-        },
-      },
+          'type' => 'integer'
+        }
+      }
     }
     input = { 'id' => '123' }
     expect(described_class.call(input, schema)).to eq({ 'id' => 123 })
@@ -78,15 +78,15 @@ RSpec.describe OpenapiParameters::Converter do
           'type' => 'object',
           'properties' => {
             'id' => {
-              'type' => 'integer',
-            },
-          },
-        },
-      },
+              'type' => 'integer'
+            }
+          }
+        }
+      }
     }
     input = { 'data' => { 'id' => '123' } }
     expect(described_class.call(input, schema)).to eq(
-      { 'data' => { 'id' => 123 } },
+      { 'data' => { 'id' => 123 } }
     )
   end
 
@@ -99,7 +99,7 @@ RSpec.describe OpenapiParameters::Converter do
   it 'converts array items with prefixItems defined' do
     schema = {
       'type' => 'array',
-      'prefixItems' => [{ 'type' => 'string' }, { 'type' => 'integer' }],
+      'prefixItems' => [{ 'type' => 'string' }, { 'type' => 'integer' }]
     }
     input = %w[1 2]
     expect(described_class.call(input, schema)).to eq(['1', 2])
@@ -117,11 +117,11 @@ RSpec.describe OpenapiParameters::Converter do
       'prefixItems' => [
         { 'type' => 'integer' },
         { 'type' => 'string' },
-        { 'type' => 'integer' },
+        { 'type' => 'integer' }
       ],
       'items' => {
-        'type' => 'integer',
-      },
+        'type' => 'integer'
+      }
     }
     input = %w[1 a 3 4 5]
     expect(described_class.call(input, schema)).to eq([1, 'a', 3, 4, 5])
@@ -133,9 +133,9 @@ RSpec.describe OpenapiParameters::Converter do
       'items' => {
         'type' => 'array',
         'items' => {
-          'type' => 'integer',
-        },
-      },
+          'type' => 'integer'
+        }
+      }
     }
     input = [%w[1 2], %w[3 4]]
     expect(described_class.call(input, schema)).to eq([[1, 2], [3, 4]])
@@ -151,22 +151,22 @@ RSpec.describe OpenapiParameters::Converter do
             'type' => 'object',
             'properties' => {
               'id' => {
-                'type' => 'integer',
+                'type' => 'integer'
               },
               'clientIds' => {
                 'type' => 'array',
                 'items' => {
-                  'type' => 'integer',
-                },
-              },
-            },
-          },
-        },
-      },
+                  'type' => 'integer'
+                }
+              }
+            }
+          }
+        }
+      }
     }
     input = { 'data' => [{ 'id' => '1', 'clientIds' => %w[1 2] }] }
     expect(described_class.call(input, schema)).to eq(
-      { 'data' => [{ 'id' => 1, 'clientIds' => [1, 2] }] },
+      { 'data' => [{ 'id' => 1, 'clientIds' => [1, 2] }] }
     )
   end
 
@@ -175,13 +175,13 @@ RSpec.describe OpenapiParameters::Converter do
       'type' => 'object',
       'properties' => {
         'meta' => {
-          '$ref' => '#/components/schemas/Meta',
-        },
-      },
+          '$ref' => '#/components/schemas/Meta'
+        }
+      }
     }
     input = { 'meta' => { 'id' => '1' } }
     expect { described_class.call(input, schema) }.to raise_error(
-      OpenapiParameters::NotSupportedError,
+      OpenapiParameters::NotSupportedError
     )
   end
 end

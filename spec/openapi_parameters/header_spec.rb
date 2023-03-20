@@ -24,12 +24,12 @@ RSpec.describe OpenapiParameters::Header do
         'in' => 'header',
         'name' => 'X-Some',
         'schema' => {
-          'type' => 'string',
-        },
+          'type' => 'string'
+        }
       }
       value =
         described_class.new([parameter]).unpack(
-          { 'X-Some' => 'abc', 'X-Unknown' => 'xyz' },
+          { 'X-Some' => 'abc', 'X-Unknown' => 'xyz' }
         )
       expect(value).to eq('X-Some' => 'abc')
     end
@@ -40,8 +40,8 @@ RSpec.describe OpenapiParameters::Header do
           'in' => 'header',
           'name' => 'X-Some',
           'schema' => {
-            'type' => 'string',
-          },
+            'type' => 'string'
+          }
         }
         headers = { 'X-Some' => '12' }
         value = described_class.new([parameter]).unpack(headers)
@@ -53,8 +53,8 @@ RSpec.describe OpenapiParameters::Header do
           'in' => 'header',
           'name' => 'X-Some',
           'schema' => {
-            'type' => 'integer',
-          },
+            'type' => 'integer'
+          }
         }
         value = described_class.new([parameter]).unpack({})
         expect(value).to eq({})
@@ -66,8 +66,8 @@ RSpec.describe OpenapiParameters::Header do
           'in' => 'header',
           'name' => '[]some[things]%',
           'schema' => {
-            'type' => 'integer',
-          },
+            'type' => 'integer'
+          }
         }
         value = described_class.new([parameter]).unpack(headers)
         expect(value).to eq('[]some[things]%' => '12')
@@ -82,8 +82,8 @@ RSpec.describe OpenapiParameters::Header do
           'name' => 'X-Some',
           'explode' => true,
           'schema' => {
-            'type' => 'array',
-          },
+            'type' => 'array'
+          }
         }
         value = described_class.new([parameter]).unpack(headers)
         expect(value).to eq('X-Some' => %w[1 2])
@@ -95,8 +95,8 @@ RSpec.describe OpenapiParameters::Header do
           'name' => 'X-Some',
           'explode' => true,
           'schema' => {
-            'type' => 'array',
-          },
+            'type' => 'array'
+          }
         }
         value = described_class.new([parameter]).unpack({})
         expect(value).to eq({})
@@ -111,8 +111,8 @@ RSpec.describe OpenapiParameters::Header do
           'name' => 'X-Some',
           'explode' => false,
           'schema' => {
-            'type' => 'array',
-          },
+            'type' => 'array'
+          }
         }
         value = described_class.new([parameter]).unpack(headers)
         expect(value).to eq('X-Some' => %w[1 2])
@@ -127,16 +127,16 @@ RSpec.describe OpenapiParameters::Header do
           'name' => 'X-Some',
           'explode' => true,
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value = described_class.new([parameter]).unpack(headers)
         expect(value).to eq(
           'X-Some' => {
             'R' => '100',
             'G' => '200',
-            'B' => '150',
-          },
+            'B' => '150'
+          }
         )
       end
 
@@ -146,8 +146,8 @@ RSpec.describe OpenapiParameters::Header do
           'name' => 'X-Some',
           'explode' => true,
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value = described_class.new([parameter]).unpack({})
         expect(value).to eq({})
@@ -161,16 +161,16 @@ RSpec.describe OpenapiParameters::Header do
           'explode' => true,
           'style' => 'simple',
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value = described_class.new([parameter]).unpack(headers)
         expect(value).to eq(
           'X-Some' => {
             'R' => '100',
             'G' => '200',
-            'B' => '150',
-          },
+            'B' => '150'
+          }
         )
       end
 
@@ -181,8 +181,8 @@ RSpec.describe OpenapiParameters::Header do
           'name' => 'X-Some',
           'explode' => true,
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value = described_class.new([parameter]).unpack(headers)
         expect(value).to eq('X-Some' => 'R=100,G200,B=150')
@@ -196,16 +196,16 @@ RSpec.describe OpenapiParameters::Header do
           'in' => 'header',
           'name' => 'X-Some',
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value = described_class.new([parameter]).unpack(headers)
         expect(value).to eq(
           'X-Some' => {
             'R' => '100',
             'G' => '200',
-            'B' => '150',
-          },
+            'B' => '150'
+          }
         )
       end
 
@@ -215,8 +215,8 @@ RSpec.describe OpenapiParameters::Header do
           'in' => 'header',
           'name' => 'X-Some',
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value = described_class.new([parameter]).unpack(headers)
         expect(value).to eq('X-Some' => 'R,100,G200,B,150')
@@ -230,16 +230,16 @@ RSpec.describe OpenapiParameters::Header do
           'explode' => false,
           'style' => 'simple',
           'schema' => {
-            'type' => 'object',
-          },
+            'type' => 'object'
+          }
         }
         value = described_class.new([parameter]).unpack(headers)
         expect(value).to eq(
           'X-Some' => {
             'R' => '100',
             'G' => '200',
-            'B' => '150',
-          },
+            'B' => '150'
+          }
         )
       end
     end
