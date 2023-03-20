@@ -1,0 +1,21 @@
+require:
+  - rubocop-rspec
+
+Style:
+  Enabled: false
+
+Layout:
+  Enabled: false
+
+Naming/MethodParameterName:
+  Enabled: false
+
+AllCops:
+  NewCops: enable
+  SuggestExtensions: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 20
