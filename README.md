@@ -27,16 +27,16 @@ query_parameters = OpenapiParameters::Query.new(parameters)
 query_string = env['QUERY_STRING'] # => 'ids=1&ids=2'
 query_parameters.unpack(query_string)
 
-path_parameters = OpenapiParameters::Path.new(parameters, path)
-path_info = env['PATH_INFO'] # => '/pets/42/favorites'
-path_parameters.unpack(path_info)
+path_parameters = OpenapiParameters::Path.new(parameters, '/pets/ids')
+path_info = env['PATH_INFO'] # => '/pets/1,2,3'
+path_parameters.unpack(path_info) # => { 'ids' => [1, 2, 3] }
 
 header_parameters = OpenapiParameters::Header.new(parameters)
 header_parameters.unpack_env(env)
 
 cookie_parameters = OpenapiParameters::Cookie.new(parameters)
-cookie_string = env['HTTP_COOKIE'] # => "ids=3&ids=4&ids=5"
-cookie_parameters.unpack(cookie_string) # => { 'ids' => [3, 4, 5] }
+cookie_string = env['HTTP_COOKIE'] # => "ids=3"
+cookie_parameters.unpack(cookie_string) # => { 'ids' => [3] }
 ```
 
 Note that this library does not validate the parameter value against it's JSON Schema.
