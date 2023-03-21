@@ -5,8 +5,11 @@ require 'rack'
 module OpenapiParameters
   # Query parses query parameters from a http query strings.
   class Query
-    def initialize(parameters)
+    # @param parameters [Array<Hash>] The OpenAPI query parameter definitions.
+    # @param convert [Boolean] Whether to convert the values to the correct type.
+    def initialize(parameters, convert: true)
       @parameters = parameters
+      @convert = convert
     end
 
     def unpack(query_string) # rubocop:disable Metrics/AbcSize
@@ -18,11 +21,11 @@ module OpenapiParameters
           parsed_nested_query = Rack::Utils.parse_nested_query(query_string)
           next unless parsed_nested_query.key?(parameter.name)
 
-          result[parameter.name] = parsed_nested_query[parameter.name]
+          result[parameter.name] = convert(parsed_nested_query[parameter.name], parameter)
         else
           next unless parsed_query.key?(parameter.name)
 
-          result[parameter.name] = unpack_parameter(parameter, parsed_query)
+          result[parameter.name] = convert(unpack_parameter(parameter, parsed_query), parameter)
         end
       end
     end
@@ -30,6 +33,12 @@ module OpenapiParameters
     attr_reader :parameters
 
     private
+
+    def convert(value, parameter)
+      return value unless @convert
+
+      Converter.call(value, parameter.schema)
+    end
 
     QUERY_PARAMETER_DELIMETER = '&'
     ARRAY_DELIMER = ','

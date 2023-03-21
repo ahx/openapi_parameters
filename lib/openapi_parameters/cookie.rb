@@ -6,8 +6,10 @@ module OpenapiParameters
   # Cookie parses OpenAPI cookie parameters from a cookie string.
   class Cookie
     # @param parameters [Array<Hash>] The OpenAPI parameter definitions.
-    def initialize(parameters)
+    # @param convert [Boolean] Whether to convert the values to the correct type.
+    def initialize(parameters, convert: true)
       @parameters = parameters
+      @convert = convert
     end
 
     # @param cookie_string [String] The cookie string from the request. Example "foo=bar; baz=qux"
@@ -17,7 +19,10 @@ module OpenapiParameters
         parameter = Parameter.new(parameter)
         next unless cookies.key?(parameter.name)
 
-        result[parameter.name] = unpack_parameter(parameter, cookies)
+        result[parameter.name] = catch :skip do
+          value = unpack_parameter(parameter, cookies)
+          @convert ? Converter.call(value, parameter.schema) : value
+        end
       end
     end
 
@@ -48,7 +53,7 @@ module OpenapiParameters
         else
           value.split(ARRAY_DELIMER)
         end
-      return value if entries.length.odd?
+      throw :skip, value if entries.length.odd?
 
       Hash[*entries]
     end

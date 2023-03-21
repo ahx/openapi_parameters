@@ -13,10 +13,16 @@ RSpec.describe OpenapiParameters::Header do
   end
 
   describe '#unpack' do
-    it 'returns a string value if no type is defined' do
-      parameter = { 'in' => 'header', 'name' => 'X-Some' }
-      value = described_class.new([parameter]).unpack('X-Some' => 'abc')
-      expect(value).to eq('X-Some' => 'abc')
+    it 'returns the converted value by default' do
+      parameter = { 'in' => 'header', 'name' => 'X-Some', 'schema' => { 'type' => 'integer' } }
+      value = described_class.new([parameter]).unpack('X-Some' => '12')
+      expect(value).to eq('X-Some' => 12)
+    end
+
+    it 'accepts convert: false' do
+      parameter = { 'in' => 'header', 'name' => 'X-Some', 'schema' => { 'type' => 'integer' } }
+      value = described_class.new([parameter], convert: false).unpack('X-Some' => '12')
+      expect(value).to eq('X-Some' => '12')
     end
 
     it 'excludes unknown headers' do
@@ -70,7 +76,7 @@ RSpec.describe OpenapiParameters::Header do
           }
         }
         value = described_class.new([parameter]).unpack(headers)
-        expect(value).to eq('[]some[things]%' => '12')
+        expect(value).to eq('[]some[things]%' => 12)
       end
     end
 

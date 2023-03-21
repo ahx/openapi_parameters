@@ -55,7 +55,7 @@ module OpenapiParameters
 
     def convert_object(object, schema)
       object.each_with_object({}) do |(key, value), hsh|
-        hsh[key] = convert(value, schema.fetch('properties').fetch(key))
+        hsh[key] = convert(value, schema['properties']&.fetch(key))
       end
     end
 

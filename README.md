@@ -11,7 +11,7 @@ Note that OpenAPI supportes parameter definition on path and operation objects. 
 ### Unpack query/path/header/cookie parameters from HTTP request according to their OpenAPI definition
 
 ```ruby
-parameters = [
+parameters = [{
   'name' => 'ids',
   'required' => true,
   'in' => 'query', # or 'path', 'header', 'cookie'
@@ -21,11 +21,12 @@ parameters = [
       'type' => 'integer'
     }
   }
-]
+}]
 
 query_parameters = OpenapiParameters::Query.new(parameters)
 query_string = env['QUERY_STRING'] # => 'ids=1&ids=2'
-query_parameters.unpack(query_string)
+query_parameters.unpack(query_string) # => { 'ids' => [1, 2] }
+query_parameters.unpack(query_string, convert: false) # => { 'ids' => ['1', '2'] }
 
 path_parameters = OpenapiParameters::Path.new(parameters, '/pets/ids')
 path_info = env['PATH_INFO'] # => '/pets/1,2,3'
@@ -40,6 +41,31 @@ cookie_parameters.unpack(cookie_string) # => { 'ids' => [3] }
 ```
 
 Note that this library does not validate the parameter value against it's JSON Schema.
+
+### Inspect parameter definition
+```ruby
+parameter = OpenapiParameters::Parameter.new({
+  'name' => 'ids',
+  'required' => true,
+  'in' => 'query', # or 'path', 'header', 'cookie'
+  'schema' => {
+    'type' => 'array',
+    'items' => {
+      'type' => 'integer'
+    }
+  }
+})
+parameter.name # => 'ids'
+parameter.required? # => true
+parameter.in # => 'query'
+parameter.location # => 'query' (alias for in)
+parameter.schema # => { 'type' => 'array', 'items' => { 'type' => 'integer' } }
+parameter.type # => 'array'
+parameter.deprecated? # => false
+parameter.media_type # => nil
+parameter.allow_reserved? # => false
+# etc.
+```
 
 ## Installation
 

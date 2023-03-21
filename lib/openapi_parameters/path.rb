@@ -7,21 +7,35 @@ module OpenapiParameters
   class Path
     # @param parameters [Array<Hash>] The OpenAPI path parameters.
     # @param path [String] The OpenAPI path template string.
-    def initialize(parameters, path)
+    # @param convert [Boolean] Whether to convert the values to the correct type.
+    def initialize(parameters, path, convert: true)
       @parameters = parameters
       @path = path
+      @convert = convert
     end
 
     attr_reader :parameters, :path
 
-    def unpack(path_info) # rubocop:disable Metrics/AbcSize
+    def unpack(path_info)
       parsed_path = URITemplate.new(url_template).extract(path_info) || {}
-      parameters.each_with_object(parsed_path) do |parameter, result|
-        param = Parameter.new(parameter)
-        next unless parsed_path.key?(param.name)
+      parameters.each_with_object(parsed_path) do |param, result|
+        parameter = Parameter.new(param)
+        next unless parsed_path.key?(parameter.name)
 
-        result[param.name] = array_to_hash(result[param.name]) if param.object? && result[param.name].is_a?(Array)
+        result[parameter.name] = catch :skip do
+          value = unpack_parameter(parameter, result)
+          @convert ? Converter.call(value, parameter.schema) : value
+        end
       end
+    end
+
+    def unpack_parameter(parameter, parsed_path)
+      value = parsed_path[parameter.name]
+      if parameter.object? && value.is_a?(Array)
+        throw :skip, value if value.length.odd?
+        return Hash[*value]
+      end
+      value
     end
 
     def url_template
@@ -42,12 +56,6 @@ module OpenapiParameters
     end
 
     private
-
-    def array_to_hash(array)
-      return array if array&.length&.odd?
-
-      Hash[*array]
-    end
 
     LIST_OPS = { 'simple' => nil, 'label' => '.', 'matrix' => ';' }.freeze
     private_constant :LIST_OPS

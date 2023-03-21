@@ -4,8 +4,10 @@ module OpenapiParameters
   # Header parses OpenAPI parameters from the request headers.
   class Header
     # @param parameters [Array<Hash>] The OpenAPI parameters
-    def initialize(parameters)
+    # @param convert [Boolean] Whether to convert the values to the correct type.
+    def initialize(parameters, convert: true)
       @parameters = parameters
+      @convert = convert
     end
 
     # @param headers [Hash] The headers from the request. Use HeadersHash to convert a Rack env to a Hash.
@@ -14,7 +16,10 @@ module OpenapiParameters
         parameter = Parameter.new(parameter)
         next unless headers.key?(parameter.name)
 
-        result[parameter.name] = unpack_parameter(parameter, headers)
+        result[parameter.name] = catch :skip do
+          value = unpack_parameter(parameter, headers)
+          @convert ? Converter.call(value, parameter.schema) : value
+        end
       end
     end
 
@@ -47,7 +52,7 @@ module OpenapiParameters
         else
           value.split(ARRAY_DELIMER)
         end
-      return value if entries.length.odd?
+      throw :skip, value if entries.length.odd?
 
       Hash[*entries]
     end

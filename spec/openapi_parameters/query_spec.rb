@@ -22,6 +22,30 @@ RSpec.describe OpenapiParameters::Query do
       expect(value).to eq('id' => 'abc')
     end
 
+    it 'returns a converted value by default' do
+      parameter = {
+        'in' => 'query',
+        'name' => 'id',
+        'schema' => {
+          'type' => 'integer'
+        }
+      }
+      value = described_class.new([parameter]).unpack('id=1')
+      expect(value).to eq('id' => 1)
+    end
+
+    it 'accepts convert: false' do
+      parameter = {
+        'in' => 'query',
+        'name' => 'id',
+        'schema' => {
+          'type' => 'integer'
+        }
+      }
+      value = described_class.new([parameter], convert: false).unpack('id=1')
+      expect(value).to eq('id' => '1')
+    end
+
     describe 'Primitive parameter' do
       it 'returns a string' do
         parameter = {
@@ -225,9 +249,9 @@ RSpec.describe OpenapiParameters::Query do
         value = described_class.new([parameter]).unpack(query_string)
         expect(value).to eq(
           'color' => {
-            'R' => '100',
-            'G' => '200',
-            'B' => '150'
+            'R' => 100,
+            'G' => 200,
+            'B' => 150
           }
         )
       end
@@ -264,9 +288,9 @@ RSpec.describe OpenapiParameters::Query do
         value = described_class.new([parameter]).unpack(query_string)
         expect(value).to eq(
           'color' => {
-            'R' => '100',
-            'G' => '200',
-            'B' => '150'
+            'R' => 100,
+            'G' => 200,
+            'B' => 150
           }
         )
       end

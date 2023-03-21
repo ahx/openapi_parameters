@@ -7,6 +7,7 @@ Naming/MethodParameterName:
 AllCops:
   NewCops: enable
   SuggestExtensions: false
+  TargetRubyVersion: 3.1
 
 RSpec/ExampleLength:
   Enabled: false

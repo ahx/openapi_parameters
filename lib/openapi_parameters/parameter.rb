@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'set'
-
 module OpenapiParameters
   ##
   # Represents a parameter in an OpenAPI operation.

@@ -6,20 +6,33 @@ RSpec.describe OpenapiParameters::Path do
   describe '#unpack' do
     let(:path) { '/pets/{id}' }
 
-    describe 'Primitive parameter' do
-      it 'returns the value' do
-        path = '/pets/{id}'
-        parameter = {
-          'in' => 'path',
-          'name' => 'id',
-          'schema' => {
-            'type' => 'integer'
-          }
+    it 'returns the converted value by default' do
+      path = '/pets/{id}'
+      parameter = {
+        'in' => 'path',
+        'name' => 'id',
+        'schema' => {
+          'type' => 'integer'
         }
-        params = described_class.new([parameter], path).unpack('/pets/12')
-        expect(params).to eq('id' => '12')
-      end
+      }
+      params = described_class.new([parameter], path).unpack('/pets/12')
+      expect(params).to eq('id' => 12)
+    end
 
+    it 'accepts convert: false' do
+      path = '/pets/{id}'
+      parameter = {
+        'in' => 'path',
+        'name' => 'id',
+        'schema' => {
+          'type' => 'integer'
+        }
+      }
+      params = described_class.new([parameter], path, convert: false).unpack('/pets/12')
+      expect(params).to eq('id' => '12')
+    end
+
+    describe 'Primitive parameter' do
       it 'returns multiple values' do
         parameters = [
           { 'in' => 'path', 'name' => 'id', 'schema' => { 'type' => 'integer' } },
@@ -35,7 +48,7 @@ RSpec.describe OpenapiParameters::Path do
           described_class.new(parameters, '/pets/{id}/schedule/{year}').unpack(
             '/pets/12/schedule/2022'
           )
-        expect(params).to eq('id' => '12', 'year' => '2022')
+        expect(params).to eq('id' => 12, 'year' => 2022)
       end
     end
 

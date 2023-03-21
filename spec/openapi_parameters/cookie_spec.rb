@@ -4,11 +4,18 @@ require_relative '../../lib/openapi_parameters/cookie'
 
 RSpec.describe OpenapiParameters::Cookie do
   describe '#unpack' do
-    it 'returns the cookie value' do
-      cookies = 'Some=abc;'
-      parameter = { 'in' => 'cookie', 'name' => 'Some' }
+    it 'returns the converted value by default' do
+      cookies = 'Some=12;'
+      parameter = { 'in' => 'cookie', 'name' => 'Some', 'schema' => { 'type' => 'integer' } }
       value = described_class.new([parameter]).unpack(cookies)
-      expect(value).to eq('Some' => 'abc')
+      expect(value).to eq('Some' => 12)
+    end
+
+    it 'accepts convert: false' do
+      cookies = 'Some=12;'
+      parameter = { 'in' => 'cookie', 'name' => 'Some', 'schema' => { 'type' => 'integer' } }
+      value = described_class.new([parameter], convert: false).unpack(cookies)
+      expect(value).to eq('Some' => '12')
     end
 
     describe 'No schema type defined' do
@@ -38,7 +45,7 @@ RSpec.describe OpenapiParameters::Cookie do
           }
         }
         value = described_class.new([parameter]).unpack(cookies)
-        expect(value).to eq('Some' => '12')
+        expect(value).to eq('Some' => 12)
       end
 
       it 'excludes key if parameter not set' do
@@ -64,7 +71,7 @@ RSpec.describe OpenapiParameters::Cookie do
           }
         }
         value = described_class.new([parameter]).unpack(cookies)
-        expect(value).to eq('[]some[things]%' => '12')
+        expect(value).to eq('[]some[things]%' => 12)
       end
     end
 
