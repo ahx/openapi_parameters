@@ -3,7 +3,7 @@
 require_relative 'lib/openapi_parameters/version'
 
 Gem::Specification.new do |spec|
-  spec.name = 'OpenapiParameters'
+  spec.name = 'openapi_parameters'
   spec.version = OpenapiParameters::VERSION
   spec.authors = ['Andreas Haller']
   spec.email = ['andreas.haller@posteo.de']
@@ -37,7 +37,7 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'rack', '~> 3.0'
+  spec.add_dependency 'rack', '>= 2.2'
   spec.add_dependency 'uri_template', '>= 0.7', '< 2.0'
   spec.add_dependency 'zeitwerk', '~> 2.6'
 
