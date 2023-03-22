@@ -27,6 +27,10 @@ RSpec.describe OpenapiParameters::Converter do
     expect(described_class.call('123', 'type' => 'integer')).to eq(123)
   end
 
+  it 'returns the origin value if invalid integer' do
+    expect(described_class.call('a', 'type' => 'integer')).to eq('a')
+  end
+
   it 'returns nil' do
     expect(described_class.call(nil, 'type' => 'integer')).to be_nil
   end
@@ -39,12 +43,20 @@ RSpec.describe OpenapiParameters::Converter do
     expect(described_class.call('12.3', 'type' => 'number')).to eq(12.3)
   end
 
+  it 'returns original value if invalid float' do
+    expect(described_class.call('a', 'type' => 'number')).to eq('a')
+  end
+
   it 'converts a string to true' do
     expect(described_class.call('true', 'type' => 'boolean')).to be(true)
   end
 
   it 'converts a string to false' do
     expect(described_class.call('false', 'type' => 'boolean')).to be(false)
+  end
+
+  it 'returns original value if boolean is not true/false' do
+    expect(described_class.call('wrong', 'type' => 'boolean')).to be('wrong')
   end
 
   it 'ignores format' do
