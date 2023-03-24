@@ -39,6 +39,9 @@ RSpec.describe OpenapiParameters::Converter do
     expect(described_class.call(123, 'type' => 'integer')).to eq(123)
   end
 
+  it 'does not convert hex numbers' do
+    expect(described_class.call('0x23', 'type' => 'integer')).to eq('0x23')
+  end
   it 'converts a string to a float' do
     expect(described_class.call('12.3', 'type' => 'number')).to eq(12.3)
   end

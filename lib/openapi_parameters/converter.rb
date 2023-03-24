@@ -22,14 +22,17 @@ module OpenapiParameters
 
     private
 
+    require 'json'
+
     def convert(value, schema)
       check_supported!(schema)
       return if value.nil?
+      return value if schema.nil?
 
       case type(schema)
       when 'integer'
         begin
-          Integer(value)
+          Integer(value, 10)
         rescue StandardError
           value
         end
