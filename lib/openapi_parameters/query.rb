@@ -36,7 +36,7 @@ module OpenapiParameters
 
     def convert(value, parameter)
       return value unless @convert
-      return value if value === ''
+      return value if value == ''
 
       Converter.call(value, parameter.schema)
     end

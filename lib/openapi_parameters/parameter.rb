@@ -76,6 +76,8 @@ module OpenapiParameters
       false
     end
 
+    private
+
     DEFAULT_STYLE = {
       'query' => 'form',
       'path' => 'simple',
@@ -84,13 +86,15 @@ module OpenapiParameters
     }.freeze
     private_constant :DEFAULT_STYLE
 
-    private
 
     VALID_LOCATIONS = Set.new(%w[query header path cookie]).freeze
     private_constant :VALID_LOCATIONS
 
+    REF = '$ref'.freeze
+    private_constant :REF
+
     def check_supported!(definition)
-      if definition.values.any? { |v| v.is_a?(Hash) && v.key?('$ref') }
+      if definition.values.any? { |v| v.is_a?(Hash) && v.key?(REF) }
         raise NotSupportedError,
               "Parameter schema with $ref is not supported: #{definition.inspect}"
       end

@@ -54,8 +54,11 @@ module OpenapiParameters
       end
     end
 
+    REF = '$ref'.freeze
+    private_constant :REF
+
     def check_supported!(schema)
-      return unless schema&.key?('$ref')
+      return unless schema&.key?(REF)
 
       raise NotSupportedError,
             "$ref is not supported: #{@root_schema.inspect}"
