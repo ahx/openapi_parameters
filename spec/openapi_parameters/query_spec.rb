@@ -157,6 +157,21 @@ RSpec.describe OpenapiParameters::Query do
         expect(value).to eq('name' => %w[a b c])
       end
 
+      it 'returns an array with one element' do
+        query_string = 'name=a'
+        parameter = {
+          'in' => 'query',
+          'name' => 'name',
+          'explode' => true,
+          'style' => 'form',
+          'schema' => {
+            'type' => 'array',
+          }
+        }
+        value = described_class.new([parameter]).unpack(query_string)
+        expect(value).to eq('name' => %w[a])
+      end
+
       it 'returns an empty value' do
         query_string = 'name=&'
         parameter = {
@@ -189,6 +204,24 @@ RSpec.describe OpenapiParameters::Query do
         value = described_class.new([parameter]).unpack(query_string)
         expect(value).to eq('names[]' => %w[a b c])
       end
+
+      it 'works with filter[id]' do
+        query_string = 'filter[id]=a&filter[id]=b&filter[id]=c'
+        parameter = {
+          'in' => 'query',
+          'name' => 'filter[id]',
+          'explode' => true,
+          'style' => 'form',
+          'schema' => {
+            'type' => 'array',
+            'items' => {
+              'type' => 'string'
+            }
+          }
+        }
+        value = described_class.new([parameter]).unpack(query_string)
+        expect(value).to eq('filter[id]' => %w[a b c])
+      end
     end
 
     describe 'Array explode false' do
@@ -208,6 +241,22 @@ RSpec.describe OpenapiParameters::Query do
         }
         value = described_class.new([parameter]).unpack(query_string)
         expect(value).to eq('name' => %w[a b c])
+      end
+
+
+      it 'returns an array with one element' do
+        query_string = 'name=a'
+        parameter = {
+          'in' => 'query',
+          'name' => 'name',
+          'explode' => false,
+          'style' => 'form',
+          'schema' => {
+            'type' => 'array',
+          }
+        }
+        value = described_class.new([parameter]).unpack(query_string)
+        expect(value).to eq('name' => %w[a])
       end
 
       it 'returns an empty value' do

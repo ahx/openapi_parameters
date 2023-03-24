@@ -52,7 +52,8 @@ module OpenapiParameters
 
     def unpack_array(parameter, parsed_query)
       value = parsed_query[parameter.name]
-      return value if parameter.explode? || value.empty?
+      return value if value.empty?
+      return Array(value) if parameter.explode?
 
       value.split(array_delimiter(parameter.style))
     end
