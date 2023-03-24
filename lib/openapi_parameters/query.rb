@@ -14,7 +14,6 @@ module OpenapiParameters
 
     def unpack(query_string) # rubocop:disable Metrics/AbcSize
       parsed_query = Rack::Utils.parse_query(query_string)
-
       parameters.each_with_object({}) do |parameter, result|
         parameter = Parameter.new(parameter)
         if parameter.style == 'deepObject' && parameter.object?
@@ -25,7 +24,8 @@ module OpenapiParameters
         else
           next unless parsed_query.key?(parameter.name)
 
-          result[parameter.name] = convert(unpack_parameter(parameter, parsed_query), parameter)
+          unpacked = unpack_parameter(parameter, parsed_query)
+          result[parameter.name] = convert(unpacked, parameter)
         end
       end
     end
@@ -36,6 +36,7 @@ module OpenapiParameters
 
     def convert(value, parameter)
       return value unless @convert
+      return value if value === ''
 
       Converter.call(value, parameter.schema)
     end
@@ -50,11 +51,10 @@ module OpenapiParameters
     end
 
     def unpack_array(parameter, parsed_query)
-      return parsed_query[parameter.name] if parameter.explode?
+      value = parsed_query[parameter.name]
+      return value if parameter.explode? || value.empty?
 
-      return if parameter.explode?
-
-      parsed_query[parameter.name].split(array_delimiter(parameter.style))
+      value.split(array_delimiter(parameter.style))
     end
 
     def unpack_object(parameter, parsed_query)

@@ -28,11 +28,23 @@ module OpenapiParameters
 
       case type(schema)
       when 'integer'
-        Integer(value) rescue value
+        begin
+          Integer(value)
+        rescue StandardError
+          value
+        end
       when 'number'
-        Float(value) rescue value
+        begin
+          Float(value)
+        rescue StandardError
+          value
+        end
       when 'boolean'
-        value == 'true' ? true : value == 'false' ? false : value
+        if value == 'true'
+          true
+        else
+          value == 'false' ? false : value
+        end
       when 'object'
         convert_object(value, schema)
       when 'array'

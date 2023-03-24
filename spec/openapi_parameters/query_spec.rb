@@ -10,6 +10,18 @@ RSpec.describe OpenapiParameters::Query do
       expect(value).to eq('id' => 'abc')
     end
 
+    it 'returns an empty string' do
+      parameter = { 'in' => 'query', 'name' => 'id' }
+      value = described_class.new([parameter]).unpack('id=&')
+      expect(value).to eq('id' => '')
+    end
+
+    it 'returns an empty string for integer parameters' do
+      parameter = { 'in' => 'query', 'name' => 'id', 'schema' => { 'type' => 'integer' } }
+      value = described_class.new([parameter]).unpack('id=&')
+      expect(value).to eq('id' => '')
+    end
+
     it 'excludes unknown query parameters' do
       parameter = {
         'in' => 'query',
@@ -145,6 +157,21 @@ RSpec.describe OpenapiParameters::Query do
         expect(value).to eq('name' => %w[a b c])
       end
 
+      it 'returns an empty value' do
+        query_string = 'name=&'
+        parameter = {
+          'in' => 'query',
+          'name' => 'name',
+          'explode' => true,
+          'style' => 'form',
+          'schema' => {
+            'type' => 'array'
+          }
+        }
+        value = described_class.new([parameter]).unpack(query_string)
+        expect(value).to eq('name' => '')
+      end
+
       it 'works with brackets in name' do
         query_string = 'names[]=a&names[]=b&names[]=c'
         parameter = {
@@ -181,6 +208,21 @@ RSpec.describe OpenapiParameters::Query do
         }
         value = described_class.new([parameter]).unpack(query_string)
         expect(value).to eq('name' => %w[a b c])
+      end
+
+      it 'returns an empty value' do
+        query_string = 'name=&'
+        parameter = {
+          'in' => 'query',
+          'name' => 'name',
+          'explode' => false,
+          'style' => 'form',
+          'schema' => {
+            'type' => 'array'
+          }
+        }
+        value = described_class.new([parameter]).unpack(query_string)
+        expect(value).to eq('name' => '')
       end
 
       it 'supports style: spaceDelimited' do
