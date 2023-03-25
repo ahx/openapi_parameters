@@ -2,13 +2,13 @@
 
 OpenapiParameters is an an [OpenAPI](https://www.openapis.org/) aware parameter parser.
 
-OpenapiParameters unpacks HTTP/Rack (query / header / cookie) parameters exactly as described in an [OpenAPI](https://www.openapis.org/) definition. It supports `style`, `explode` and `schema` definitions according to OpenAPI 3.1.
+OpenapiParameters unpacks HTTP/Rack (query / header / cookie) parameters exactly as described in an [OpenAPI](https://www.openapis.org/) definition. It supports `style`, `explode` and `schema` definitions according to OpenAPI 3.1 (or 3.0).
 
 ## Synopsis
 
-Note that OpenAPI supportes parameter definition on path and operation objects. Parameter definition must use strings as keys.
+Note that OpenAPI supportes parameter definition on path and operation objects. Parameter definitions must use strings as keys.
 
-### Unpack query/path/header/cookie parameters from HTTP request according to their OpenAPI definition
+### Unpack query/path/header/cookie parameters from HTTP requests according to their OpenAPI definition
 
 ```ruby
 parameters = [{
@@ -43,6 +43,7 @@ cookie_parameters.unpack(cookie_string) # => { 'ids' => [3] }
 Note that this library does not validate the parameter value against it's JSON Schema.
 
 ### Inspect parameter definition
+
 ```ruby
 parameter = OpenapiParameters::Parameter.new({
   'name' => 'ids',
