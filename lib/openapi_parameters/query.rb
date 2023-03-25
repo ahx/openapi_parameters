@@ -45,7 +45,8 @@ module OpenapiParameters
     ARRAY_DELIMER = ','
 
     def unpack_parameter(parameter, parsed_query)
-      return parsed_query[parameter.name] if parameter.primitive?
+      value = parsed_query[parameter.name]
+      return value if parameter.primitive? || value.nil?
       return unpack_array(parameter, parsed_query) if parameter.array?
       return unpack_object(parameter, parsed_query) if parameter.object?
     end

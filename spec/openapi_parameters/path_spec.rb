@@ -50,6 +50,18 @@ RSpec.describe OpenapiParameters::Path do
           )
         expect(params).to eq('id' => 12, 'year' => 2022)
       end
+
+      it 'supports /{start_date}..{end_date}' do
+        parameters = [
+          { 'in' => 'path', 'name' => 'start_date'},
+          { 'in' => 'path', 'name' => 'end_date'},
+        ]
+        params =
+          described_class.new(parameters, '/{start_date}..{end_date}').unpack(
+            '/2021-01-01..2021-01-31'
+          )
+        expect(params).to eq('start_date' => '2021-01-01', 'end_date' => '2021-01-31')
+      end
     end
 
     describe 'Array explode true' do
