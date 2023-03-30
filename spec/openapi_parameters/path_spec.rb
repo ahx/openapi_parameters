@@ -31,6 +31,18 @@ RSpec.describe OpenapiParameters::Path do
       expect(params).to eq('id' => '12')
     end
 
+    it 'excludes unknown keys' do
+      parameter = {
+        'in' => 'query',
+        'name' => 'id',
+        'schema' => {
+          'type' => 'string'
+        }
+      }
+      value = described_class.new([parameter]).unpack({'a' => 'b'})
+      expect(value).to eq({})
+    end
+
     describe 'Primitive parameter' do
       it 'returns multiple values' do
         parameters = [

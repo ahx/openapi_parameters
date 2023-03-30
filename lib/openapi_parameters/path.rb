@@ -16,12 +16,12 @@ module OpenapiParameters
     attr_reader :parameters, :path
 
     def unpack(path_params)
-      parameters.each_with_object(path_params) do |param, result|
+      parameters.each_with_object({}) do |param, result|
         parameter = Parameter.new(param)
         next unless path_params.key?(parameter.name)
 
         result[parameter.name] = catch :skip do
-          value = unpack_parameter(parameter, result)
+          value = unpack_parameter(parameter, path_params)
           @convert ? Converter.call(value, parameter.schema) : value
         end
       end
