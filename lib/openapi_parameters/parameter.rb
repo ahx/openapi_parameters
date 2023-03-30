@@ -86,11 +86,10 @@ module OpenapiParameters
     }.freeze
     private_constant :DEFAULT_STYLE
 
-
     VALID_LOCATIONS = Set.new(%w[query header path cookie]).freeze
     private_constant :VALID_LOCATIONS
 
-    REF = '$ref'.freeze
+    REF = '$ref'
     private_constant :REF
 
     def check_supported!(definition)

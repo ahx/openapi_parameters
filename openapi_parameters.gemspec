@@ -38,7 +38,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'rack', '>= 2.2'
-  spec.add_dependency 'uri_template', '>= 0.7', '< 2.0'
   spec.add_dependency 'zeitwerk', '~> 2.6'
 
   # For more information and examples about making a new gem, check out our

@@ -165,7 +165,7 @@ RSpec.describe OpenapiParameters::Query do
           'explode' => true,
           'style' => 'form',
           'schema' => {
-            'type' => 'array',
+            'type' => 'array'
           }
         }
         value = described_class.new([parameter]).unpack(query_string)
@@ -243,7 +243,6 @@ RSpec.describe OpenapiParameters::Query do
         expect(value).to eq('name' => %w[a b c])
       end
 
-
       it 'returns an array with one element' do
         query_string = 'name=a'
         parameter = {
@@ -252,7 +251,7 @@ RSpec.describe OpenapiParameters::Query do
           'explode' => false,
           'style' => 'form',
           'schema' => {
-            'type' => 'array',
+            'type' => 'array'
           }
         }
         value = described_class.new([parameter]).unpack(query_string)

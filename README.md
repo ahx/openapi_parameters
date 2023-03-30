@@ -28,9 +28,8 @@ query_string = env['QUERY_STRING'] # => 'ids=1&ids=2'
 query_parameters.unpack(query_string) # => { 'ids' => [1, 2] }
 query_parameters.unpack(query_string, convert: false) # => { 'ids' => ['1', '2'] }
 
-path_parameters = OpenapiParameters::Path.new(parameters, '/pets/ids')
-path_info = env['PATH_INFO'] # => '/pets/1,2,3'
-path_parameters.unpack(path_info) # => { 'ids' => [1, 2, 3] }
+path_parameters = OpenapiParameters::Path.new(parameters)
+path_parameters.unpack(route_params) # => { 'ids' => [1, 2, 3] }
 
 header_parameters = OpenapiParameters::Header.new(parameters)
 header_parameters.unpack_env(env)

@@ -22,9 +22,7 @@ module OpenapiParameters
 
     private
 
-    require 'json'
-
-    def convert(value, schema)
+    def convert(value, schema) # rubocop:disable Metrics/*
       check_supported!(schema)
       return if value.nil?
       return value if schema.nil?
@@ -57,7 +55,7 @@ module OpenapiParameters
       end
     end
 
-    REF = '$ref'.freeze
+    REF = '$ref'
     private_constant :REF
 
     def check_supported!(schema)
