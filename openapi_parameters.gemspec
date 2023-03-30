@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary = 'OpenapiParameters is an OpenAPI aware parameter parser'
   spec.description =
-    'OpenapiParameters parses HTTP query parameters exactly as described in an OpenAPI API description.'
+    'OpenapiParameters parses HTTP query/path/header/cookie parameters exactly as described in an OpenAPI API description.'
   spec.homepage = 'https://github.com/ahx/OpenapiParameters'
   spec.required_ruby_version = '>= 3.1.0'
   spec.licenses = ['MIT']
