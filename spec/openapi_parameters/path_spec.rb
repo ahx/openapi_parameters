@@ -39,7 +39,7 @@ RSpec.describe OpenapiParameters::Path do
           'type' => 'string'
         }
       }
-      value = described_class.new([parameter]).unpack({'a' => 'b'})
+      value = described_class.new([parameter]).unpack({ 'a' => 'b' })
       expect(value).to eq({})
     end
 
