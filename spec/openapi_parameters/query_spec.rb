@@ -10,13 +10,13 @@ RSpec.describe OpenapiParameters::Query do
       expect(value).to eq('id' => 'abc')
     end
 
-    it 'returns an empty string' do
+    it 'returns an empty string for empty string parameters' do
       parameter = { 'in' => 'query', 'name' => 'id' }
       value = described_class.new([parameter]).unpack('id=&')
       expect(value).to eq('id' => '')
     end
 
-    it 'returns an empty string for integer parameters' do
+    it 'returns an empty string for empty integer parameters' do
       parameter = { 'in' => 'query', 'name' => 'id', 'schema' => { 'type' => 'integer' } }
       value = described_class.new([parameter]).unpack('id=&')
       expect(value).to eq('id' => '')

@@ -2,7 +2,7 @@
 
 OpenapiParameters is an an [OpenAPI](https://www.openapis.org/) aware parameter parser.
 
-OpenapiParameters unpacks HTTP/Rack (query / header / cookie) parameters exactly as described in an [OpenAPI](https://www.openapis.org/) definition. It supports `style`, `explode` and `schema` definitions according to OpenAPI 3.1 (or 3.0).
+OpenapiParameters unpacks HTTP/Rack (query / header / cookie) parameters exactly as described in an [OpenAPI](https://www.openapis.org/) definition. It supports `style`, `explode` and `schema` definitions according to OpenAPI 3.1 (or 3.0). The gem is mainly build to be used inside of other OpenAPI tooling.
 
 ## Synopsis
 
