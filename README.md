@@ -29,6 +29,7 @@ query_parameters.unpack(query_string) # => { 'ids' => [1, 2] }
 query_parameters.unpack(query_string, convert: false) # => { 'ids' => ['1', '2'] }
 
 path_parameters = OpenapiParameters::Path.new(parameters)
+route_params = env['route.params'] # This depends on the webframework you are using
 path_parameters.unpack(route_params) # => { 'ids' => [1, 2, 3] }
 
 header_parameters = OpenapiParameters::Header.new(parameters)
