@@ -1,8 +1,10 @@
-# OpenapiParameters
+# openapi_parameters
 
-OpenapiParameters is an an [OpenAPI](https://www.openapis.org/) aware parameter parser.
+openapi_parameters is an an [OpenAPI](https://www.openapis.org/) aware parameter parser.
 
-OpenapiParameters unpacks HTTP/Rack query / path / header / cookie parameters exactly as described in an [OpenAPI](https://www.openapis.org/) definition. It supports `style`, `explode` and `schema` definitions according to OpenAPI 3.1 (or 3.0). The gem is mainly build to be used inside of other OpenAPI tooling like [openapi_first](https://github.com/ahx/openapi_first).
+openapi_parameters unpacks HTTP/Rack query / path / header / cookie parameters exactly as described in an [OpenAPI](https://www.openapis.org/) definition. It supports `style`, `explode` and `schema` definitions according to OpenAPI 3.1 (or 3.0). The gem is mainly build to be used inside of other OpenAPI tooling like [openapi_first](https://github.com/ahx/openapi_first).
+
+[Learn about parameters in OpenAPI](https://spec.openapis.org/oas/latest.html#parameter-object).
 
 ## Synopsis
 
@@ -72,11 +74,11 @@ parameter.allow_reserved? # => false
 
 Install the gem and add to the application's Gemfile by executing:
 
-    $ bundle add OpenapiParameters
+    $ bundle add openapi_parameters
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install OpenapiParameters
+    $ gem install openapi_parameters
 
 ## Development
 
@@ -86,4 +88,4 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/ahx/OpenapiParameters.
+Bug reports and pull requests are welcome on GitHub at https://github.com/ahx/openapi_parameters.

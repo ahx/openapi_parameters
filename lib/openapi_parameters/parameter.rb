@@ -4,6 +4,7 @@ module OpenapiParameters
   ##
   # Represents a parameter in an OpenAPI operation.
   class Parameter
+    # @param definition [Hash] The parameter definition. A string keyed Hash.
     def initialize(definition)
       check_supported!(definition)
       @definition = definition
