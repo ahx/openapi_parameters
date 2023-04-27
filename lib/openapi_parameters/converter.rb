@@ -23,7 +23,7 @@ module OpenapiParameters
     private
 
     def convert(value, schema) # rubocop:disable Metrics/*
-      check_supported!(schema)
+      # check_supported!(schema)
       return if value.nil?
       return value if schema.nil?
 
@@ -53,16 +53,6 @@ module OpenapiParameters
       else
         value
       end
-    end
-
-    REF = '$ref'
-    private_constant :REF
-
-    def check_supported!(schema)
-      return unless schema&.key?(REF)
-
-      raise NotSupportedError,
-            "$ref is not supported: #{@root_schema.inspect}"
     end
 
     def type(schema)

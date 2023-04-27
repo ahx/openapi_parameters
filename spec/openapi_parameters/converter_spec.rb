@@ -185,19 +185,4 @@ RSpec.describe OpenapiParameters::Converter do
       { 'data' => [{ 'id' => 1, 'clientIds' => [1, 2] }] }
     )
   end
-
-  it 'raises an error when schema has a $ref deep inside' do
-    schema = {
-      'type' => 'object',
-      'properties' => {
-        'meta' => {
-          '$ref' => '#/components/schemas/Meta'
-        }
-      }
-    }
-    input = { 'meta' => { 'id' => '1' } }
-    expect { described_class.call(input, schema) }.to raise_error(
-      OpenapiParameters::NotSupportedError
-    )
-  end
 end
