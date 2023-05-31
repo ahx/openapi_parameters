@@ -20,7 +20,7 @@ module OpenapiParameters
         next unless cookies.key?(parameter.name)
 
         result[parameter.name] = catch :skip do
-          value = unpack_parameter(parameter, cookies)
+          value = Unpacker.unpack_value(parameter, cookies[parameter.name])
           @convert ? Converter.call(value, parameter.schema) : value
         end
       end
@@ -29,36 +29,5 @@ module OpenapiParameters
     private
 
     attr_reader :parameters
-
-    def unpack_parameter(parameter, cookies)
-      unpack_value(parameter, cookies[parameter.name])
-    end
-
-    def unpack_value(parameter, value)
-      return value if value.nil?
-      return unpack_object(parameter, value) if parameter.object?
-      return unpack_array(value) if parameter.array?
-
-      value
-    end
-
-    def unpack_array(value)
-      value.split(ARRAY_DELIMER)
-    end
-
-    ARRAY_DELIMER = ','
-    OBJECT_EXPLODE_SPLITTER = Regexp.union(',', '=').freeze
-
-    def unpack_object(parameter, value)
-      entries =
-        if parameter.explode?
-          value.split(OBJECT_EXPLODE_SPLITTER)
-        else
-          value.split(ARRAY_DELIMER)
-        end
-      throw :skip, value if entries.length.odd?
-
-      Hash[*entries]
-    end
   end
 end

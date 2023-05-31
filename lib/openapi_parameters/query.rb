@@ -24,8 +24,8 @@ module OpenapiParameters
         else
           next unless parsed_query.key?(parameter.name)
 
-          unpacked = unpack_parameter(parameter, parsed_query)
-          result[parameter.name] = convert(unpacked, parameter)
+          value = Unpacker.unpack_value(parameter, parsed_query[parameter.name])
+          result[parameter.name] = convert(value, parameter)
         end
       end
     end
@@ -39,43 +39,6 @@ module OpenapiParameters
       return value if value == ''
 
       Converter.call(value, parameter.schema)
-    end
-
-    QUERY_PARAMETER_DELIMETER = '&'
-    ARRAY_DELIMER = ','
-
-    def unpack_parameter(parameter, parsed_query)
-      value = parsed_query[parameter.name]
-      return value if parameter.primitive? || value.nil?
-      return unpack_array(parameter, value) if parameter.array?
-      return unpack_object(parameter, value) if parameter.object?
-    end
-
-    def unpack_array(parameter, value)
-      return value if value.empty?
-      return Array(value) if parameter.explode?
-
-      value.split(array_delimiter(parameter.style))
-    end
-
-    def unpack_object(parameter, value)
-      return value if parameter.explode?
-
-      array = value&.split(ARRAY_DELIMER)
-      return array if array.length.odd?
-
-      Hash[*array]
-    end
-
-    DELIMERS = {
-      'pipeDelimited' => '|',
-      'spaceDelimited' => ' ',
-      'form' => ',',
-      'simple' => ','
-    }.freeze
-
-    def array_delimiter(style)
-      DELIMERS.fetch(style, ARRAY_DELIMER)
     end
   end
 end
