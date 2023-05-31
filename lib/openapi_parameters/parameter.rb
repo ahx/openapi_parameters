@@ -87,22 +87,14 @@ module OpenapiParameters
     }.freeze
     private_constant :DEFAULT_STYLE
 
-    VALID_LOCATIONS = Set.new(%w[query header path cookie]).freeze
-    private_constant :VALID_LOCATIONS
-
     REF = '$ref'
     private_constant :REF
 
     def check_supported!(definition)
-      if definition.values.any? { |v| v.is_a?(Hash) && v.key?(REF) }
-        raise NotSupportedError,
-              "Parameter schema with $ref is not supported: #{definition.inspect}"
-      end
-      return if VALID_LOCATIONS.include?(definition['in'])
+      return unless definition.values.any? { |v| v.is_a?(Hash) && v.key?(REF) }
 
-      raise ArgumentError,
-            %(Parameter definition must have an 'in' property defined
-               which should be one of #{VALID_LOCATIONS.join(', ')}).freeze
+      raise NotSupportedError,
+            "Parameter schema with $ref is not supported: #{definition.inspect}"
     end
   end
 end
