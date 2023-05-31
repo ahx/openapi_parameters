@@ -31,8 +31,11 @@ module OpenapiParameters
     attr_reader :parameters
 
     def unpack_parameter(parameter, cookies)
-      value = cookies[parameter.name]
-      return if value.nil?
+      unpack_value(parameter, cookies[parameter.name])
+    end
+
+    def unpack_value(parameter, value)
+      return value if value.nil?
       return unpack_object(parameter, value) if parameter.object?
       return unpack_array(value) if parameter.array?
 

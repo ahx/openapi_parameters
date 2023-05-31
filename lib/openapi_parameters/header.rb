@@ -32,10 +32,15 @@ module OpenapiParameters
     private
 
     def unpack_parameter(parameter, headers)
-      value = headers[parameter.name]
-      return value if parameter.primitive?
+      unpack_value(parameter, headers[parameter.name])
+    end
+
+    def unpack_value(parameter, value)
+      return value if value.nil?
       return unpack_object(parameter, value) if parameter.object?
       return unpack_array(value) if parameter.array?
+
+      value
     end
 
     def unpack_array(value)

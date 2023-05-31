@@ -47,22 +47,21 @@ module OpenapiParameters
     def unpack_parameter(parameter, parsed_query)
       value = parsed_query[parameter.name]
       return value if parameter.primitive? || value.nil?
-      return unpack_array(parameter, parsed_query) if parameter.array?
-      return unpack_object(parameter, parsed_query) if parameter.object?
+      return unpack_array(parameter, value) if parameter.array?
+      return unpack_object(parameter, value) if parameter.object?
     end
 
-    def unpack_array(parameter, parsed_query)
-      value = parsed_query[parameter.name]
+    def unpack_array(parameter, value)
       return value if value.empty?
       return Array(value) if parameter.explode?
 
       value.split(array_delimiter(parameter.style))
     end
 
-    def unpack_object(parameter, parsed_query)
-      return parsed_query[parameter.name] if parameter.explode?
+    def unpack_object(parameter, value)
+      return value if parameter.explode?
 
-      array = parsed_query[parameter.name]&.split(ARRAY_DELIMER)
+      array = value&.split(ARRAY_DELIMER)
       return array if array.length.odd?
 
       Hash[*array]

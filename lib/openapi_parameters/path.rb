@@ -30,10 +30,15 @@ module OpenapiParameters
     private
 
     def unpack_parameter(parameter, parsed_path)
-      value = parsed_path[parameter.name]
-      return value if parameter.primitive? || value.nil?
+      unpack_value(parameter, parsed_path[parameter.name])
+    end
+
+    def unpack_value(parameter, value)
+      return value if value.nil?
       return unpack_array(parameter, value) if parameter.array?
       return unpack_object(parameter, value) if parameter.object?
+
+      value
     end
 
     def unpack_array(parameter, value)
