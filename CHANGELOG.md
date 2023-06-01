@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.2.2] - 2023-06-01
+
 - Remove superflous validation of "in" property
 - Remove superfluous check for unsupported $ref inside parameter schema
 
