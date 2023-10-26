@@ -49,7 +49,7 @@ module OpenapiParameters
       when 'object'
         convert_object(value, schema)
       when 'array'
-        convert_array(value, schema)
+        convert_array(Array(value), schema)
       else
         value
       end
