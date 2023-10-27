@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require_relative '../../lib/openapi_parameters/query'
+require 'rack/test'
+require 'json'
 
 RSpec.describe OpenapiParameters::Query do
   describe '#unpack' do
@@ -328,6 +330,14 @@ RSpec.describe OpenapiParameters::Query do
               },
               'B' => {
                 'type' => 'integer'
+              },
+              'nested' => {
+                'type' => 'object',
+                'properties' => {
+                  'a' => {
+                    'type' => 'integer'
+                  }
+                }
               }
             }
           }
@@ -349,6 +359,73 @@ RSpec.describe OpenapiParameters::Query do
       it 'does not add key if not set' do
         value = described_class.new([parameter]).unpack('')
         expect(value).to eq({})
+      end
+
+      it 'supports nested objects' do
+        query_string = 'color[R]=100&color[nested][a]=42'
+        value = described_class.new([parameter]).unpack(query_string)
+        expect(value).to eq(
+          'color' => {
+            'R' => 100,
+            'nested' => {
+              'a' => 42
+            }
+          }
+        )
+      end
+    end
+
+    describe 'Object style: deepObject with nested array value is not supported' do
+      # All of these are not supported. See also https://github.com/OAI/OpenAPI-Specification/issues/1706
+
+      let(:parameter) do
+        {
+          'in' => 'query',
+          'name' => 'color',
+          'explode' => true,
+          'style' => 'deepObject',
+          'schema' => {
+            'type' => 'object',
+            'properties' => {
+              'values' => {
+                'type' => 'array',
+                'items' => {
+                  'type' => 'integer'
+                }
+              }
+            }
+          }
+        }
+      end
+
+      it 'does not convert single value' do
+        query_string = 'color[values]=100'
+        value = described_class.new([parameter]).unpack(query_string)
+        expect(value).to eq(
+          'color' => {
+            'values' => '100'
+          }
+        )
+      end
+
+      it 'does not convert exploded multiple values' do
+        query_string = 'color[values]=100&color[values]=255'
+        value = described_class.new([parameter]).unpack(query_string)
+        expect(value).to eq(
+          'color' => {
+            'values' => '255'
+          }
+        )
+      end
+
+      it 'does not convert comma-separated values' do
+        query_string = 'color[values]=100,255'
+        value = described_class.new([parameter]).unpack(query_string)
+        expect(value).to eq(
+          'color' => {
+            'values' => '100,255'
+          }
+        )
       end
     end
 

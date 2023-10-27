@@ -5,67 +5,67 @@ require_relative '../../lib/openapi_parameters/converter'
 RSpec.describe OpenapiParameters::Converter do
   describe 'No schema defined' do
     it 'does not convert the value' do
-      expect(described_class.call('123', nil)).to eq('123')
+      expect(described_class.convert('123', nil)).to eq('123')
     end
   end
 
   describe 'No schema type defined' do
     it 'does not convert the value' do
-      expect(described_class.call('1', {})).to eq('1')
+      expect(described_class.convert('1', {})).to eq('1')
     end
   end
 
   it 'keeps unknown values' do
-    expect(described_class.call('123', {})).to eq('123')
+    expect(described_class.convert('123', {})).to eq('123')
   end
 
   it 'keeps string values' do
-    expect(described_class.call('123', 'type' => 'string')).to eq('123')
+    expect(described_class.convert('123', 'type' => 'string')).to eq('123')
   end
 
   it 'converts a string to an integer' do
-    expect(described_class.call('123', 'type' => 'integer')).to eq(123)
+    expect(described_class.convert('123', 'type' => 'integer')).to eq(123)
   end
 
   it 'returns the origin value if invalid integer' do
-    expect(described_class.call('a', 'type' => 'integer')).to eq('a')
+    expect(described_class.convert('a', 'type' => 'integer')).to eq('a')
   end
 
   it 'returns nil' do
-    expect(described_class.call(nil, 'type' => 'integer')).to be_nil
+    expect(described_class.convert(nil, 'type' => 'integer')).to be_nil
   end
 
   it 'keeps an integer an integer' do
-    expect(described_class.call(123, 'type' => 'integer')).to eq(123)
+    expect(described_class.convert(123, 'type' => 'integer')).to eq(123)
   end
 
   it 'does not convert hex numbers' do
-    expect(described_class.call('0x23', 'type' => 'integer')).to eq('0x23')
+    expect(described_class.convert('0x23', 'type' => 'integer')).to eq('0x23')
   end
 
   it 'converts a string to a float' do
-    expect(described_class.call('12.3', 'type' => 'number')).to eq(12.3)
+    expect(described_class.convert('12.3', 'type' => 'number')).to eq(12.3)
   end
 
   it 'returns original value if invalid float' do
-    expect(described_class.call('a', 'type' => 'number')).to eq('a')
+    expect(described_class.convert('a', 'type' => 'number')).to eq('a')
   end
 
   it 'converts a string to true' do
-    expect(described_class.call('true', 'type' => 'boolean')).to be(true)
+    expect(described_class.convert('true', 'type' => 'boolean')).to be(true)
   end
 
   it 'converts a string to false' do
-    expect(described_class.call('false', 'type' => 'boolean')).to be(false)
+    expect(described_class.convert('false', 'type' => 'boolean')).to be(false)
   end
 
   it 'returns original value if boolean is not true/false' do
-    expect(described_class.call('wrong', 'type' => 'boolean')).to be('wrong')
+    expect(described_class.convert('wrong', 'type' => 'boolean')).to be('wrong')
   end
 
   it 'ignores format' do
     expect(
-      described_class.call(
+      described_class.convert(
         '2020-09-15',
         'type' => 'string',
         'format' => 'date'
@@ -83,7 +83,7 @@ RSpec.describe OpenapiParameters::Converter do
       }
     }
     input = { 'id' => '123' }
-    expect(described_class.call(input, schema)).to eq({ 'id' => 123 })
+    expect(described_class.convert(input, schema)).to eq({ 'id' => 123 })
   end
 
   it 'converts values of a nested object' do
@@ -101,7 +101,7 @@ RSpec.describe OpenapiParameters::Converter do
       }
     }
     input = { 'data' => { 'id' => '123' } }
-    expect(described_class.call(input, schema)).to eq(
+    expect(described_class.convert(input, schema)).to eq(
       { 'data' => { 'id' => 123 } }
     )
   end
@@ -109,7 +109,7 @@ RSpec.describe OpenapiParameters::Converter do
   it 'converts array items' do
     schema = { 'type' => 'array', 'items' => { 'type' => 'integer' } }
     input = %w[1 2 3]
-    expect(described_class.call(input, schema)).to eq([1, 2, 3])
+    expect(described_class.convert(input, schema)).to eq([1, 2, 3])
   end
 
   it 'converts array items with prefixItems defined' do
@@ -118,13 +118,13 @@ RSpec.describe OpenapiParameters::Converter do
       'prefixItems' => [{ 'type' => 'string' }, { 'type' => 'integer' }]
     }
     input = %w[1 2]
-    expect(described_class.call(input, schema)).to eq(['1', 2])
+    expect(described_class.convert(input, schema)).to eq(['1', 2])
   end
 
   it 'converts array items with prefixItems but ignores additional items' do
     schema = { 'type' => 'array', 'prefixItems' => [{ 'type' => 'integer' }] }
     input = %w[1 2 3]
-    expect(described_class.call(input, schema)).to eq([1, '2', '3'])
+    expect(described_class.convert(input, schema)).to eq([1, '2', '3'])
   end
 
   it 'converts array items with prefixItems and items defined as defined in JSON Schema 2020' do
@@ -140,7 +140,7 @@ RSpec.describe OpenapiParameters::Converter do
       }
     }
     input = %w[1 a 3 4 5]
-    expect(described_class.call(input, schema)).to eq([1, 'a', 3, 4, 5])
+    expect(described_class.convert(input, schema)).to eq([1, 'a', 3, 4, 5])
   end
 
   it 'converts items in nested arrays' do
@@ -154,7 +154,7 @@ RSpec.describe OpenapiParameters::Converter do
       }
     }
     input = [%w[1 2], %w[3 4]]
-    expect(described_class.call(input, schema)).to eq([[1, 2], [3, 4]])
+    expect(described_class.convert(input, schema)).to eq([[1, 2], [3, 4]])
   end
 
   it 'converts nested objects and arrays' do
@@ -181,7 +181,7 @@ RSpec.describe OpenapiParameters::Converter do
       }
     }
     input = { 'data' => [{ 'id' => '1', 'clientIds' => %w[1 2] }] }
-    expect(described_class.call(input, schema)).to eq(
+    expect(described_class.convert(input, schema)).to eq(
       { 'data' => [{ 'id' => 1, 'clientIds' => [1, 2] }] }
     )
   end

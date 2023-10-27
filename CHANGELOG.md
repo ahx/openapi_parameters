@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.3.0] - 2023-10-27
+
+- Query parameters: Don't attempt to convert arras within deepObject objects. Behaviour is not defined in OpenApi 3.1.
+
 ## [0.2.2] - 2023-06-01
 
 - Remove superflous validation of "in" property
