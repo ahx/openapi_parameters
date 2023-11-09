@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    openapi_parameters (0.3.0)
+    openapi_parameters (0.3.1)
       rack (>= 2.2)
       zeitwerk (~> 2.6)
 
