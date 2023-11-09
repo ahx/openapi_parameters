@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+## [0.3.1] - 2023-11-09
+- Make it work with Zeitwerk's `eager_load`
+
 ## [0.3.0] - 2023-10-27
 
 - Query parameters: Don't attempt to convert arras within deepObject objects. Behaviour is not defined in OpenApi 3.1.
