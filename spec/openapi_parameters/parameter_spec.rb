@@ -15,7 +15,7 @@ RSpec.describe OpenapiParameters::Parameter do
         }
       }
       expect { described_class.new(definition) }.to raise_error(
-        OpenapiParameters::NotSupportedError
+        OpenapiParameters::Errors::NotSupportedError
       )
     end
   end

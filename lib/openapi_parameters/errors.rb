@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 module OpenapiParameters
-  class Error < StandardError
-  end
+  module Errors
+    class Error < StandardError
+    end
 
-  class NotSupportedError < Error
+    class NotSupportedError < Error
+    end
   end
 end

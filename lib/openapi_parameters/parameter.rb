@@ -93,7 +93,7 @@ module OpenapiParameters
     def check_supported!(definition)
       return unless definition.values.any? { |v| v.is_a?(Hash) && v.key?(REF) }
 
-      raise NotSupportedError,
+      raise OpenapiParameters::Errors::NotSupportedError,
             "Parameter schema with $ref is not supported: #{definition.inspect}"
     end
   end
