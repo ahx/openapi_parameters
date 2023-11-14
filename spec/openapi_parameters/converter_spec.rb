@@ -15,6 +15,38 @@ RSpec.describe OpenapiParameters::Converter do
     end
   end
 
+  describe 'when schema does not define type, but properties' do
+    it 'converts values' do
+      schema = {
+        'properties' => {
+          'id' => {
+            'type' => 'integer'
+          }
+        }
+      }
+      input = { 'id' => '123' }
+      expect(described_class.convert(input, schema)).to eq(
+        { 'id' => 123 }
+      )
+    end
+  end
+
+  describe 'when schema does not match input' do
+    it 'does not convert values' do
+      schema = {
+        'properties' => {
+          'id' => {
+            'type' => 'integer'
+          }
+        }
+      }
+      input = { 'some' => 'stuff' }
+      expect(described_class.convert(input, schema)).to eq(
+        { 'some' => 'stuff' }
+      )
+    end
+  end
+
   it 'keeps unknown values' do
     expect(described_class.convert('123', {})).to eq('123')
   end

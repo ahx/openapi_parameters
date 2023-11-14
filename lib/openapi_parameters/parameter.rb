@@ -47,7 +47,7 @@ module OpenapiParameters
     end
 
     def object?
-      type == 'object'
+      type == 'object' || style == 'deepObject' || schema&.key?('properties')
     end
 
     def style
