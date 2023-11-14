@@ -36,7 +36,17 @@ module OpenapiParameters
         when 'array'
           convert_array(value, schema)
         else
-          value
+          if schema['properties']
+            convert_object(value, schema)
+          else
+            value
+          end
+        end
+      end
+
+      def convert_object(object, schema)
+        object.each_with_object({}) do |(key, value), hsh|
+          hsh[key] = convert(value, schema['properties']&.fetch(key, nil))
         end
       end
 
@@ -44,12 +54,6 @@ module OpenapiParameters
 
       def type(schema)
         schema && schema['type']
-      end
-
-      def convert_object(object, schema)
-        object.each_with_object({}) do |(key, value), hsh|
-          hsh[key] = convert(value, schema['properties']&.fetch(key))
-        end
       end
 
       def convert_array(array, schema)

@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Assume that schemas with `properties` or `style: deepObject` describe Objects and therefore convert it's values.
+
 ## [0.3.1] - 2023-11-09
 - Make it work with Zeitwerk's `eager_load`
 

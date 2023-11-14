@@ -373,6 +373,34 @@ RSpec.describe OpenapiParameters::Query do
           }
         )
       end
+
+      context 'without object type specified' do
+        let(:parameter) do
+          {
+            'in' => 'query',
+            'name' => 'color',
+            'explode' => true,
+            'style' => 'deepObject',
+            'schema' => {
+              'properties' => {
+                'R' => {
+                  'type' => 'integer'
+                }
+              }
+            }
+          }
+        end
+
+        it 'still returns an object' do
+          query_string = 'color[R]=100'
+          value = described_class.new([parameter]).unpack(query_string)
+          expect(value).to eq(
+            'color' => {
+              'R' => 100
+            }
+          )
+        end
+      end
     end
 
     describe 'Object style: deepObject with nested array value is not supported' do

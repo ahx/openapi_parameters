@@ -12,5 +12,8 @@ AllCops:
 RSpec/ExampleLength:
   Enabled: false
 
+RSpec/NestedGroups:
+  Max: 4
+
 Metrics/MethodLength:
   Max: 20
