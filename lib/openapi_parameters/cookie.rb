@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rack'
-
 module OpenapiParameters
   # Cookie parses OpenAPI cookie parameters from a cookie string.
   class Cookie
