@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Remove zeitwerk. It's awesome, but not needed here
+
 ## [0.3.2] - 2023-11-14
 
 - Assume that schemas with `properties` or `style: deepObject` describe Objects and therefore convert it's values.
