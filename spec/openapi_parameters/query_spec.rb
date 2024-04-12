@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require_relative '../../lib/openapi_parameters/query'
-require 'rack/test'
-require 'json'
-
 RSpec.describe OpenapiParameters::Query do
   describe '#unpack' do
     it 'returns a string value if no type is defined' do

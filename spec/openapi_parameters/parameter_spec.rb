@@ -2,8 +2,6 @@
 
 require 'yaml'
 
-require_relative '../../lib/openapi_parameters/parameter'
-
 RSpec.describe OpenapiParameters::Parameter do
   describe 'when parameter definition has a $ref' do
     it 'raises an error' do

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative '../../lib/openapi_parameters/header'
-
 RSpec.describe OpenapiParameters::Header do
   describe '#unpack_env' do
     it 'returns the header value' do

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module OpenapiParameters
-  ##
   # Tries to convert a request parameter value (string) to the type specified in the JSON Schema.
   module Converter
     class << self

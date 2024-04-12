@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module OpenapiParameters
-  ## Unpacks a paramexter value from a string as defined in the OpenAPI specification.
+  # Unpacks a parameter value from a string as defined in the OpenAPI specification.
   # @visibility private
   module Unpacker
     class << self

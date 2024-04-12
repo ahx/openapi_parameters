@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative '../../lib/openapi_parameters/cookie'
-
 RSpec.describe OpenapiParameters::Cookie do
   describe '#unpack' do
     it 'returns the converted value by default' do

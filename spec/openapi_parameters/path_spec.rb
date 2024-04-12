@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative '../../lib/openapi_parameters/path'
-
 RSpec.describe OpenapiParameters::Path do
   describe '#unpack' do
     let(:path) { '/pets/{id}' }

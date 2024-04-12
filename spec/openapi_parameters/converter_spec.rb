@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative '../../lib/openapi_parameters/converter'
-
 RSpec.describe OpenapiParameters::Converter do
   describe 'No schema defined' do
     it 'does not convert the value' do
