@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    openapi_parameters (0.3.2)
+    openapi_parameters (0.3.3)
       rack (>= 2.2)
 
 GEM
