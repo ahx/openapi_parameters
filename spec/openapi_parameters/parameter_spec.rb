@@ -156,6 +156,13 @@ RSpec.describe OpenapiParameters::Parameter do
       expect(parameter.object?).to be true
     end
 
+    it 'is deep_object' do
+      parameter = described_class.new(
+        { 'in' => 'query', 'style' => 'deepObject' }
+      )
+      expect(parameter.deep_object?).to be true
+    end
+
     it 'returns true if schema defines properties' do
       parameter =
         described_class.new(

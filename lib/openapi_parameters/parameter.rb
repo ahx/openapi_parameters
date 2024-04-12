@@ -7,6 +7,7 @@ module OpenapiParameters
     # @param definition [Hash] The parameter definition. A string keyed Hash.
     def initialize(definition)
       @definition = definition
+      @is_deep_object = style == 'deepObject'
       check_supported!
     end
 
@@ -16,7 +17,10 @@ module OpenapiParameters
       definition['name']
     end
 
-    ##
+    def deep_object?
+      @is_deep_object
+    end
+
     # @return [String] The location of the parameter in the request, "path", "query", "header" or "cookie".
     def location
       definition['in']

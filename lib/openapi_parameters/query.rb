@@ -16,7 +16,7 @@ module OpenapiParameters
       parsed_query = Rack::Utils.parse_query(query_string)
       parameters.each_with_object({}) do |parameter, result|
         parameter = Parameter.new(parameter)
-        if parameter.style == 'deepObject'
+        if parameter.deep_object?
           parsed_nested_query = Rack::Utils.parse_nested_query(query_string)
           next unless parsed_nested_query.key?(parameter.name)
 
