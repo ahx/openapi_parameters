@@ -10,45 +10,47 @@ gemfile do
   gem 'openapi_parameters', path: './..'
 end
 
-bench = lambda do
-  deep_object_parameter = {
-    'in' => 'query',
-    'name' => 'color',
-    'explode' => true,
-    'style' => 'deepObject',
-    'schema' => {
-      'type' => 'object',
-      'properties' => {
-        'R' => {
-          'type' => 'integer'
-        },
-        'G' => {
-          'type' => 'integer'
-        },
-        'B' => {
-          'type' => 'integer'
-        },
-        'nested' => {
-          'type' => 'object',
-          'properties' => {
-            'a' => {
-              'type' => 'integer'
-            }
-          }
-        }
-      }
-    }
-  }
-  OpenapiParameters::Query.new([deep_object_parameter]).unpack('color[R]=100&color[G]=200&color[B]=150')
+integer_parameter = OpenapiParameters::Query.new([{
+                                                   'in' => 'query',
+                                                   'name' => 'id',
+                                                   'schema' => {
+                                                     'type' => 'integer'
+                                                   }
+                                                 }])
 
-  integer_parameter = {
-    'in' => 'query',
-    'name' => 'id',
-    'schema' => {
-      'type' => 'integer'
-    }
-  }
-  OpenapiParameters::Query.new([integer_parameter]).unpack('id=1')
+deep_object_parameter =
+  OpenapiParameters::Query.new([{
+                                 'in' => 'query',
+                                 'name' => 'color',
+                                 'explode' => true,
+                                 'style' => 'deepObject',
+                                 'schema' => {
+                                   'type' => 'object',
+                                   'properties' => {
+                                     'R' => {
+                                       'type' => 'integer'
+                                     },
+                                     'G' => {
+                                       'type' => 'integer'
+                                     },
+                                     'B' => {
+                                       'type' => 'integer'
+                                     },
+                                     'nested' => {
+                                       'type' => 'object',
+                                       'properties' => {
+                                         'a' => {
+                                           'type' => 'integer'
+                                         }
+                                       }
+                                     }
+                                   }
+                                 }
+                               }])
+
+bench = lambda do
+  deep_object_parameter.unpack('color[R]=100&color[G]=200&color[B]=150')
+  integer_parameter.unpack('id=1')
 end
 
 Benchmark.ips do |x|
