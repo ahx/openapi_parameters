@@ -7,15 +7,12 @@ module OpenapiParameters
     # @param definition [Hash] The parameter definition. A string keyed Hash.
     def initialize(definition)
       @definition = definition
+      @name = definition['name']
       @is_deep_object = style == 'deepObject'
       check_supported!
     end
 
-    attr_reader :definition
-
-    def name
-      definition['name']
-    end
+    attr_reader :definition, :name
 
     def deep_object?
       @is_deep_object
