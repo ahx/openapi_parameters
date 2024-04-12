@@ -6,8 +6,8 @@ module OpenapiParameters
   class Parameter
     # @param definition [Hash] The parameter definition. A string keyed Hash.
     def initialize(definition)
-      check_supported!(definition)
       @definition = definition
+      check_supported!
     end
 
     attr_reader :definition
@@ -90,8 +90,8 @@ module OpenapiParameters
     REF = '$ref'
     private_constant :REF
 
-    def check_supported!(definition)
-      return unless definition.values.any? { |v| v.is_a?(Hash) && v.key?(REF) }
+    def check_supported!
+      return unless schema&.key?(REF)
 
       raise NotSupportedError,
             "Parameter schema with $ref is not supported: #{definition.inspect}"
