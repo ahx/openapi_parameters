@@ -6,14 +6,13 @@ module OpenapiParameters
     # @param parameters [Array<Hash>] The OpenAPI parameters
     # @param convert [Boolean] Whether to convert the values to the correct type.
     def initialize(parameters, convert: true)
-      @parameters = parameters
+      @parameters = parameters.map { Parameter.new(_1) }
       @convert = convert
     end
 
     # @param headers [Hash] The headers from the request. Use HeadersHash to convert a Rack env to a Hash.
     def unpack(headers)
       parameters.each_with_object({}) do |parameter, result|
-        parameter = Parameter.new(parameter)
         next unless headers.key?(parameter.name)
 
         result[parameter.name] = catch :skip do

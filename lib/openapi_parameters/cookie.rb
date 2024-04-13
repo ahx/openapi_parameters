@@ -6,7 +6,7 @@ module OpenapiParameters
     # @param parameters [Array<Hash>] The OpenAPI parameter definitions.
     # @param convert [Boolean] Whether to convert the values to the correct type.
     def initialize(parameters, convert: true)
-      @parameters = parameters
+      @parameters = parameters.map { Parameter.new(_1) }
       @convert = convert
     end
 
@@ -14,7 +14,6 @@ module OpenapiParameters
     def unpack(cookie_string)
       cookies = Rack::Utils.parse_cookies_header(cookie_string)
       parameters.each_with_object({}) do |parameter, result|
-        parameter = Parameter.new(parameter)
         next unless cookies.key?(parameter.name)
 
         result[parameter.name] = catch :skip do

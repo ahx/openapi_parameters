@@ -8,14 +8,13 @@ module OpenapiParameters
     # @param parameters [Array<Hash>] The OpenAPI query parameter definitions.
     # @param convert [Boolean] Whether to convert the values to the correct type.
     def initialize(parameters, convert: true)
-      @parameters = parameters
+      @parameters = parameters.map { Parameter.new(_1) }
       @convert = convert
     end
 
     def unpack(query_string) # rubocop:disable Metrics/AbcSize
       parsed_query = Rack::Utils.parse_query(query_string)
       parameters.each_with_object({}) do |parameter, result|
-        parameter = Parameter.new(parameter)
         if parameter.deep_object?
           parsed_nested_query = Rack::Utils.parse_nested_query(query_string)
           next unless parsed_nested_query.key?(parameter.name)
