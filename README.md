@@ -13,19 +13,18 @@ Note that OpenAPI supportes parameter definition on path and operation objects. 
 ### Unpack query/path/header/cookie parameters from HTTP requests according to their OpenAPI definition
 
 ```ruby
-parameters = [{
+
+query_parameters = OpenapiParameters::Query.new([{
   'name' => 'ids',
   'required' => true,
-  'in' => 'query', # or 'path', 'header', 'cookie'
+  'in' => 'query', # Note that we only pass query parameters here
   'schema' => {
     'type' => 'array',
     'items' => {
       'type' => 'integer'
     }
   }
-}]
-
-query_parameters = OpenapiParameters::Query.new(parameters)
+}])
 query_string = env['QUERY_STRING'] # => 'ids=1&ids=2'
 query_parameters.unpack(query_string) # => { 'ids' => [1, 2] }
 query_parameters.unpack(query_string, convert: false) # => { 'ids' => ['1', '2'] }
