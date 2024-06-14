@@ -5,7 +5,7 @@ module OpenapiParameters
   module Converter
     class << self
       ##
-      # @param input [String, Hash, Array] the value to convert
+      # @param value [String, Hash, Array] the value to convert
       # @param schema [Hash] the schema to use for conversion.
       def convert(value, schema) # rubocop:disable Metrics
         return if value.nil?
@@ -43,9 +43,11 @@ module OpenapiParameters
         end
       end
 
-      def convert_object(object, schema)
-        object.each_with_object({}) do |(key, value), hsh|
-          hsh[key] = convert(value, schema['properties']&.fetch(key, nil))
+      def convert_object(value, schema)
+        return value unless value.is_a?(Hash)
+
+        value.each_with_object({}) do |(key, val), hsh|
+          hsh[key] = convert(val, schema['properties']&.fetch(key, nil))
         end
       end
 

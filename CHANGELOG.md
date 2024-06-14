@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.3.4] - 2024-06-14
+
+- Fix handling invalid object query parameters (String vs Hash)
+
 ## [0.3.3] - 2023-04-13
 
 - Remove zeitwerk. It's awesome, but not needed here

@@ -352,6 +352,14 @@ RSpec.describe OpenapiParameters::Query do
         )
       end
 
+      it 'returns the original value if unpacking fails' do
+        query_string = 'color=RGB'
+        value = described_class.new([parameter]).unpack(query_string)
+        expect(value).to eq(
+          'color' => 'RGB'
+        )
+      end
+
       it 'does not add key if not set' do
         value = described_class.new([parameter]).unpack('')
         expect(value).to eq({})

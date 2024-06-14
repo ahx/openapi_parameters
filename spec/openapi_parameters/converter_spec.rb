@@ -43,6 +43,30 @@ RSpec.describe OpenapiParameters::Converter do
         { 'some' => 'stuff' }
       )
     end
+
+    it 'does not try to convert a string to an object' do
+      schema = {
+        'type' => 'object',
+        'properties' => {
+          'id' => {
+            'type' => 'integer'
+          }
+        }
+      }
+      input = 'foo'
+      expect(described_class.convert(input, schema)).to eq(input)
+    end
+
+    it 'does not try to convert a string to an array' do
+      schema = {
+        'type' => 'array',
+        'items' => {
+          'type' => 'integer'
+        }
+      }
+      input = 'foo'
+      expect(described_class.convert(input, schema)).to eq(input)
+    end
   end
 
   it 'keeps unknown values' do
