@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+- Add Parameter#convert(value)
+- Slight performance optimization
+
 ## [0.3.4] - 2024-06-14
 
 - Fix handling invalid object query parameters (String vs Hash)

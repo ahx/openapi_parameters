@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rack'
+require_relative 'openapi_parameters/converters'
 require_relative 'openapi_parameters/converter'
 require_relative 'openapi_parameters/cookie'
 require_relative 'openapi_parameters/error'

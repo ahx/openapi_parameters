@@ -18,7 +18,7 @@ module OpenapiParameters
 
         result[parameter.name] = catch :skip do
           value = Unpacker.unpack_value(parameter, cookies[parameter.name])
-          @convert ? Converter.convert(value, parameter.schema) : value
+          @convert ? parameter.convert(value) : value
         end
       end
     end

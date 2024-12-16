@@ -19,13 +19,13 @@ module OpenapiParameters
           parsed_nested_query = Rack::Utils.parse_nested_query(query_string)
           next unless parsed_nested_query.key?(parameter.name)
 
-          result[parameter.name] = convert(parsed_nested_query[parameter.name], parameter)
+          value = parsed_nested_query[parameter.name]
         else
           next unless parsed_query.key?(parameter.name)
 
           value = Unpacker.unpack_value(parameter, parsed_query[parameter.name])
-          result[parameter.name] = convert(value, parameter)
         end
+        result[parameter.name] = @convert ? parameter.convert(value) : value
       end
     end
 

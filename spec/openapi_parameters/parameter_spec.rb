@@ -26,6 +26,14 @@ RSpec.describe OpenapiParameters::Parameter do
     end
   end
 
+  describe '#convert' do
+    it 'converts the value' do
+      definition = { 'in' => 'query', 'name' => 'id', 'schema' => { 'type' => 'integer' } }
+      subject = described_class.new(definition)
+      expect(subject.convert('2')).to eq 2
+    end
+  end
+
   describe '#location' do
     it 'returns the "in" value' do
       definition = { 'in' => 'query', 'name' => 'id' }

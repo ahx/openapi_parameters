@@ -9,10 +9,15 @@ module OpenapiParameters
       @definition = definition
       @name = definition['name']
       @is_deep_object = style == 'deepObject'
+      @converter = Converters[schema]
       check_supported!
     end
 
     attr_reader :definition, :name
+
+    def convert(value)
+      @converter.call(value)
+    end
 
     def deep_object?
       @is_deep_object
