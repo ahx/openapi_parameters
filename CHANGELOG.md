@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.3.4] - 2024-12-17
+
 - Add Parameter#convert(value)
 - Slight performance optimization
 

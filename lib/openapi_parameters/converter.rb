@@ -2,6 +2,7 @@
 
 module OpenapiParameters
   # Tries to convert a request parameter value (string) to the type specified in the JSON Schema.
+  # @visibility private
   module Converter
     class << self
       ##
