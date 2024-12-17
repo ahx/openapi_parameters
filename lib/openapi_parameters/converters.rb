@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module OpenapiParameters
+  # Home for all converters
   module Converters
     @converters = {}
 
