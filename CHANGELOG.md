@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.5.0] - 2025-04-01
+
 - Add option to remove "[]" from unpacked query openapi_parameters
   ```ruby
   OpenapiParameters::Query.new(
@@ -9,7 +11,7 @@
   # => { 'ids' => ['2'] }
   ```
 
-## [0.3.4] - 2024-12-17
+## [0.4.0] - 2024-12-17
 
 - Add Parameter#convert(value)
 - Slight performance optimization
