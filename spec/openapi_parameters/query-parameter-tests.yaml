@@ -1,0 +1,471 @@
+---
+# OpenAPI Parameters Query Tests
+- description: Returns a string value if no type is defined
+  parameter:
+    in: query
+    name: id
+  query_string: id=abc
+  unpacked_value:
+    id: abc
+
+- description: Returns an empty string for empty string parameters
+  parameter:
+    in: query
+    name: id
+  query_string: id=&
+  unpacked_value:
+    id: ""
+
+- description: Returns an empty string for empty integer parameters
+  parameter:
+    in: query
+    name: id
+    schema:
+      type: integer
+  query_string: id=&
+  unpacked_value:
+    id: ""
+
+- description: Excludes unknown query parameters
+  parameter:
+    in: query
+    name: id
+    schema:
+      type: string
+  query_string: id=abc&unknown=xyz
+  unpacked_value:
+    id: abc
+
+- description: Returns a converted value by default
+  parameter:
+    in: query
+    name: id
+    schema:
+      type: integer
+  query_string: id=1
+  unpacked_value:
+    id: 1
+
+- description: Accepts convert false option
+  parameter:
+    in: query
+    name: id
+    schema:
+      type: integer
+  query_string: id=1
+  options:
+    convert: false
+  unpacked_value:
+    id: "1"
+
+- description: Returns a string value
+  parameter:
+    in: query
+    name: id
+    schema:
+      type: string
+  query_string: id=abc
+  unpacked_value:
+    id: abc
+
+- description: Does not add key if not set
+  parameter:
+    in: query
+    name: id
+    schema:
+      type: string
+  query_string: ""
+  unpacked_value: {}
+
+- description: Works with parameters containing dashes
+  parameter:
+    in: query
+    name: pet-id
+    schema:
+      type: string
+  query_string: pet-id=abc
+  unpacked_value:
+    pet-id: abc
+
+- description: Works with brackets in parameter name
+  parameter:
+    in: query
+    name: filter[name]
+    schema:
+      type: string
+  query_string: filter[name]=abc
+  unpacked_value:
+    filter[name]: abc
+
+- description: Works with complex parameter names
+  parameter:
+    in: query
+    name: x[[]abc]
+    schema:
+      type: string
+  query_string: x[[]abc]=abc
+  unpacked_value:
+    x[[]abc]: abc
+
+- description: Applies explode true if explode is undefined
+  parameter:
+    in: query
+    name: name
+    schema:
+      type: array
+      items:
+        type: string
+  query_string: name=a&name=b&name=c
+  unpacked_value:
+    name: [a, b, c]
+
+- description: Returns an array with explode true
+  parameter:
+    in: query
+    name: name
+    explode: true
+    style: form
+    schema:
+      type: array
+      items:
+        type: string
+  query_string: name=a&name=b&name=c
+  unpacked_value:
+    name: [a, b, c]
+
+- description: Returns an array with one element
+  parameter:
+    in: query
+    name: name
+    explode: true
+    style: form
+    schema:
+      type: array
+  query_string: name=a
+  unpacked_value:
+    name: [a]
+
+- description: Returns an empty value
+  parameter:
+    in: query
+    name: name
+    explode: true
+    style: form
+    schema:
+      type: array
+  query_string: name=&
+  unpacked_value:
+    name: ""
+
+- description: Works with brackets in name
+  parameter:
+    in: query
+    name: names[]
+    explode: true
+    style: form
+    schema:
+      type: array
+      items:
+        type: string
+  query_string: names[]=a&names[]=b&names[]=c
+  unpacked_value:
+    names[]: [a, b, c]
+
+- description: Works with escaped brackets in name
+  parameter:
+    in: query
+    name: names[]
+    explode: true
+    style: form
+    schema:
+      type: array
+      items:
+        type: string
+  query_string: 'names%5B%5D=a&names%5B%5D=b&names%5B%5D=c'
+  unpacked_value:
+    names[]: [a, b, c]
+
+- description: Can remove brackets from array parameters
+  parameter:
+    in: query
+    name: ids[]
+    schema:
+      type: array
+    explode: true
+  query_string: ids[]=1&ids[]=2
+  options:
+    rack_array_compat: true
+  unpacked_value:
+    ids: ['1', '2']
+
+- description: Works with filter[id] pattern
+  parameter:
+    in: query
+    name: filter[id]
+    explode: true
+    style: form
+    schema:
+      type: array
+      items:
+        type: string
+  query_string: filter[id]=a&filter[id]=b&filter[id]=c
+  unpacked_value:
+    filter[id]: [a, b, c]
+
+- description: Returns an array with form style
+  parameter:
+    in: query
+    name: name
+    explode: false
+    style: form
+    schema:
+      type: array
+      items:
+        type: string
+  query_string: name=a,b,c
+  unpacked_value:
+    name: [a, b, c]
+
+- description: Returns an array with one element
+  parameter:
+    in: query
+    name: name
+    explode: false
+    style: form
+    schema:
+      type: array
+  query_string: name=a
+  unpacked_value:
+    name: [a]
+
+- description: Returns an empty value
+  parameter:
+    in: query
+    name: name
+    explode: false
+    style: form
+    schema:
+      type: array
+  query_string: name=&
+  unpacked_value:
+    name: ""
+
+- description: Supports spaceDelimited style
+  parameter:
+    in: query
+    name: name
+    explode: false
+    style: spaceDelimited
+    schema:
+      type: array
+      items:
+        type: string
+  query_string: name=a%20b%20c
+  unpacked_value:
+    name: [a, b, c]
+
+- description: Supports pipeDelimited style
+  parameter:
+    in: query
+    name: name
+    explode: false
+    style: pipeDelimited
+    schema:
+      type: array
+      items:
+        type: string
+  query_string: name=a%7Cb%7Cc
+  unpacked_value:
+    name: [a, b, c]
+
+- description: Returns an object with deep object style
+  parameter:
+    in: query
+    name: color
+    explode: true
+    style: deepObject
+    schema:
+      type: object
+      properties:
+        R:
+          type: integer
+        G:
+          type: integer
+        B:
+          type: integer
+        nested:
+          type: object
+          properties:
+            a:
+              type: integer
+  query_string: color[R]=100&color[G]=200&color[B]=150
+  unpacked_value:
+    color:
+      R: 100
+      G: 200
+      B: 150
+
+- description: Returns the original value if unpacking fails
+  parameter:
+    in: query
+    name: color
+    explode: true
+    style: deepObject
+    schema:
+      type: object
+      properties:
+        R:
+          type: integer
+        G:
+          type: integer
+        B:
+          type: integer
+        nested:
+          type: object
+          properties:
+            a:
+              type: integer
+  query_string: color=RGB
+  unpacked_value:
+    color: RGB
+
+- description: Does not add key if not set
+  parameter:
+    in: query
+    name: color
+    explode: true
+    style: deepObject
+    schema:
+      type: object
+      properties:
+        R:
+          type: integer
+        G:
+          type: integer
+        B:
+          type: integer
+        nested:
+          type: object
+          properties:
+            a:
+              type: integer
+  query_string: ""
+  unpacked_value: {}
+
+- description: Supports nested objects
+  parameter:
+    in: query
+    name: color
+    explode: true
+    style: deepObject
+    schema:
+      type: object
+      properties:
+        R:
+          type: integer
+        G:
+          type: integer
+        B:
+          type: integer
+        nested:
+          type: object
+          properties:
+            a:
+              type: integer
+  query_string: color[R]=100&color[nested][a]=42
+  unpacked_value:
+    color:
+      R: 100
+      nested:
+        a: 42
+
+- description: Still returns an object without object type specified
+  parameter:
+    in: query
+    name: color
+    explode: true
+    style: deepObject
+    schema:
+      properties:
+        R:
+          type: integer
+  query_string: color[R]=100
+  unpacked_value:
+    color:
+      R: 100
+
+- description: Does not convert single value in nested array
+  parameter:
+    in: query
+    name: color
+    explode: true
+    style: deepObject
+    schema:
+      type: object
+      properties:
+        values:
+          type: array
+          items:
+            type: integer
+  query_string: color[values]=100
+  unpacked_value:
+    color:
+      values: "100"
+
+- description: Does not convert exploded multiple values
+  parameter:
+    in: query
+    name: color
+    explode: true
+    style: deepObject
+    schema:
+      type: object
+      properties:
+        values:
+          type: array
+          items:
+            type: integer
+  query_string: color[values]=100&color[values]=255
+  unpacked_value:
+    color:
+      values: "255"
+
+- description: Does not convert comma-separated values
+  parameter:
+    in: query
+    name: color
+    explode: true
+    style: deepObject
+    schema:
+      type: object
+      properties:
+        values:
+          type: array
+          items:
+            type: integer
+  query_string: color[values]=100,255
+  unpacked_value:
+    color:
+      values: "100,255"
+
+- description: Supports form style with explode false
+  parameter:
+    in: query
+    name: color
+    explode: false
+    style: form
+    schema:
+      type: object
+      properties:
+        R:
+          type: integer
+        G:
+          type: integer
+        B:
+          type: integer
+  query_string: color=R,100,G,200,B,150
+  unpacked_value:
+    color:
+      R: 100
+      G: 200
+      B: 150

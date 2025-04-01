@@ -52,6 +52,13 @@ module OpenapiParameters
       type == 'array'
     end
 
+    EMPTY_BRACKETS = '[]'
+    private_constant :EMPTY_BRACKETS
+
+    def bracket_array?
+      @bracket_array ||= array? && name.end_with?(EMPTY_BRACKETS)
+    end
+
     def object?
       type == 'object' || style == 'deepObject' || schema&.key?('properties')
     end

@@ -7,9 +7,10 @@ module OpenapiParameters
   class Query
     # @param parameters [Array<Hash>] The OpenAPI query parameter definitions.
     # @param convert [Boolean] Whether to convert the values to the correct type.
-    def initialize(parameters, convert: true)
+    def initialize(parameters, convert: true, rack_array_compat: false)
       @parameters = parameters.map { Parameter.new(_1) }
       @convert = convert
+      @remove_array_brackets = rack_array_compat
     end
 
     def unpack(query_string) # rubocop:disable Metrics/AbcSize
@@ -25,11 +26,17 @@ module OpenapiParameters
 
           value = Unpacker.unpack_value(parameter, parsed_query[parameter.name])
         end
-        result[parameter.name] = @convert ? parameter.convert(value) : value
+        key = if remove_array_brackets && parameter.bracket_array?
+                parameter.name.delete_suffix('[]')
+              else
+                parameter.name
+              end
+        result[key] = @convert ? parameter.convert(value) : value
       end
     end
 
     attr_reader :parameters
+    private attr_reader :remove_array_brackets
 
     private
 
