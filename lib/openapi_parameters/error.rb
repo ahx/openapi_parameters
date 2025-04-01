@@ -3,4 +3,7 @@
 module OpenapiParameters
   class Error < StandardError
   end
+
+  class NotSupportetError < Error
+  end
 end
