@@ -6,4 +6,6 @@ module OpenapiParameters
 
   class NotSupportetError < Error
   end
+
+  InvalidParameterError = Rack::Utils::InvalidParameterError
 end

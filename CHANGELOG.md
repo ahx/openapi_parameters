@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Raise `Rack::Utils::InvalidParameterError` when query paramter has invalid "%"-encoding
+
 ## [0.5.0] - 2025-04-01
 
 - Add option to remove "[]" from unpacked query openapi_parameters
