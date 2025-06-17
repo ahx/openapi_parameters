@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.5.1] - 2025-06-17
+
 - Raise `Rack::Utils::InvalidParameterError` when query paramter has invalid "%"-encoding
 
 ## [0.5.0] - 2025-04-01
