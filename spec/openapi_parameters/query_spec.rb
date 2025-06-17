@@ -15,5 +15,19 @@ RSpec.describe OpenapiParameters::Query do
         expect(value).to eq(unpacked_value)
       end
     end
+
+    context 'with invalid query string encoding' do
+      it 'raises an exception' do
+        parameter = { 'in' => 'query', 'name' => 'limit' }
+        query_string = 'limit=%E0%A4%A'
+        unpacker = described_class.new([parameter])
+        expect do
+          unpacker.unpack(query_string)
+        end.to raise_error(OpenapiParameters::InvalidParameterError, 'invalid %-encoding (%E0%A4%A)')
+        expect do
+          unpacker.unpack(query_string)
+        end.to raise_error(Rack::Utils::InvalidParameterError, 'invalid %-encoding (%E0%A4%A)')
+      end
+    end
   end
 end

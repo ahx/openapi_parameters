@@ -14,7 +14,7 @@ module OpenapiParameters
     end
 
     def unpack(query_string) # rubocop:disable Metrics/AbcSize
-      parsed_query = Rack::Utils.parse_query(query_string)
+      parsed_query = parse_query(query_string)
       parameters.each_with_object({}) do |parameter, result|
         if parameter.deep_object?
           parsed_nested_query = Rack::Utils.parse_nested_query(query_string)
@@ -39,6 +39,14 @@ module OpenapiParameters
     private attr_reader :remove_array_brackets
 
     private
+
+    def parse_query(query_string)
+      Rack::Utils.parse_query(query_string) do |s|
+        Rack::Utils.unescape(s)
+      rescue ArgumentError => e
+        raise Rack::Utils::InvalidParameterError, e.message
+      end
+    end
 
     def convert_primitive(value, parameter)
       return value unless @convert
