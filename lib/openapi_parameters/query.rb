@@ -47,19 +47,5 @@ module OpenapiParameters
         raise Rack::Utils::InvalidParameterError, e.message
       end
     end
-
-    def convert_primitive(value, parameter)
-      return value unless @convert
-      return value if value == ''
-
-      Converter.convert_primitive(value, parameter.schema)
-    end
-
-    def convert(value, parameter)
-      return value unless @convert
-      return value if value == ''
-
-      Converter.convert(value, parameter.schema)
-    end
   end
 end

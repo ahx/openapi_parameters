@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
+require_relative 'array_converter'
+
 module OpenapiParameters
   # Tries to convert a request parameter value (string) to the type specified in the JSON Schema.
   # @visibility private
   module Converter
     class << self
-      ##
       # @param value [String, Hash, Array] the value to convert
       # @param schema [Hash] the schema to use for conversion.
       def convert(value, schema) # rubocop:disable Metrics
@@ -34,7 +35,7 @@ module OpenapiParameters
         when 'object'
           convert_object(value, schema)
         when 'array'
-          convert_array(value, schema)
+          ArrayConverter.new(schema).call(value)
         else
           if schema['properties']
             convert_object(value, schema)
@@ -48,7 +49,7 @@ module OpenapiParameters
         return value unless value.is_a?(Hash)
 
         value.each_with_object({}) do |(key, val), hsh|
-          hsh[key] = convert(val, schema['properties']&.fetch(key, nil))
+          hsh[key] = Converter.convert(val, schema['properties']&.fetch(key, nil))
         end
       end
 
@@ -56,29 +57,6 @@ module OpenapiParameters
 
       def type(schema)
         schema && schema['type']
-      end
-
-      def convert_array(array, schema)
-        return array unless array.is_a?(Array)
-
-        item_schema = schema['items']
-        prefix_schemas = schema['prefixItems']
-        return convert_array_with_prefixes(array, prefix_schemas, item_schema) if prefix_schemas
-
-        array.map { |item| convert(item, item_schema) }
-      end
-
-      def convert_array_with_prefixes(array, prefix_schemas, item_schema)
-        prefixes =
-          array
-          .slice(0, prefix_schemas.size)
-          .each_with_index
-          .map { |item, index| convert(item, prefix_schemas[index]) }
-        array =
-          array[prefix_schemas.size..].map! do |item|
-            convert(item, item_schema)
-          end
-        prefixes + array
       end
     end
   end
