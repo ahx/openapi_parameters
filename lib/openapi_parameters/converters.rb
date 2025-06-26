@@ -26,6 +26,12 @@ module OpenapiParameters
       value
     end)
 
+    register('array', lambda do |value|
+      break [] if value.nil? || value.empty?
+
+      value
+    end)
+
     register('number', lambda do |value|
       Float(value)
     rescue StandardError
