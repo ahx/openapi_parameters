@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.6.1] - 2025-06-23
+
+- Fix converting items of array paramters
+
 ## [0.6.0] - 2025-06-23
 
 - Array parameters without a value ("?ids=" or "?ids") return an empty array instead of nil or an empty string.
