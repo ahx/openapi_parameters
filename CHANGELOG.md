@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+- Array parameters without a value ("?ids=" or "?ids") return an empty array instead of nil or an empty string.
+  This makes parsing more consistent, because it should not matter if "=" is added or not.
+
 ## [0.5.1] - 2025-06-17
 
 - Raise `Rack::Utils::InvalidParameterError` when query paramter has invalid "%"-encoding

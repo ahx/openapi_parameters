@@ -119,6 +119,30 @@
   unpacked_value:
     name: [a, b, c]
 
+- description: Returns an empty array if query parameter is missing '='
+  parameter:
+    in: query
+    name: name
+    schema:
+      type: array
+      items:
+        type: string
+  query_string: name
+  unpacked_value:
+    name: []
+
+- description: Returns an empty array if query parameter as an empty value
+  parameter:
+    in: query
+    name: name
+    schema:
+      type: array
+      items:
+        type: string
+  query_string: name=
+  unpacked_value:
+    name: []
+
 - description: Returns an array with explode true
   parameter:
     in: query
@@ -145,7 +169,7 @@
   unpacked_value:
     name: [a]
 
-- description: Returns an empty value
+- description: Returns an empty array for empty explode parameter
   parameter:
     in: query
     name: name
@@ -153,9 +177,9 @@
     style: form
     schema:
       type: array
-  query_string: name=&
+  query_string: name=
   unpacked_value:
-    name: ""
+    name: []
 
 - description: Works with brackets in name
   parameter:
@@ -238,7 +262,7 @@
   unpacked_value:
     name: [a]
 
-- description: Returns an empty value
+- description: Returns an empty array for empty non-explode parameter
   parameter:
     in: query
     name: name
@@ -248,7 +272,7 @@
       type: array
   query_string: name=&
   unpacked_value:
-    name: ""
+    name: []
 
 - description: Supports spaceDelimited style
   parameter:
