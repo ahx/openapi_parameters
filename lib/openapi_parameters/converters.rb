@@ -15,6 +15,8 @@ module OpenapiParameters
       def [](schema)
         type = schema && schema['type']
         converters.fetch(type) do
+          return ArrayConverter.new(schema) if type == 'array'
+
           ->(value) { Converter.convert(value, schema) }
         end
       end
@@ -23,12 +25,6 @@ module OpenapiParameters
     register('integer', lambda do |value|
       Integer(value, 10)
     rescue StandardError
-      value
-    end)
-
-    register('array', lambda do |value|
-      break [] if value.nil? || value.empty?
-
       value
     end)
 

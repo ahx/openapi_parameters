@@ -195,6 +195,19 @@
   unpacked_value:
     names[]: [a, b, c]
 
+- description: Converts values with brackets in name
+  parameter:
+    in: query
+    name: ids[]
+    explode: true
+    schema:
+      type: array
+      items:
+        type: integer
+  query_string: ids[]=1&ids[]=2&ids[]=3
+  unpacked_value:
+    ids[]: [1, 2, 3]
+
 - description: Works with escaped brackets in name
   parameter:
     in: query
