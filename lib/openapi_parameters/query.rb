@@ -11,16 +11,21 @@ module OpenapiParameters
       @parameters = parameters.map { Parameter.new(_1) }
       @convert = convert
       @remove_array_brackets = rack_array_compat
+      @any_deep_object = @parameters.any?(&:deep_object?)
     end
 
-    def unpack(query_string) # rubocop:disable Metrics/AbcSize
+    def unpack(query_string) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
       parsed_query = parse_query(query_string)
+      parsed_nested_query = Rack::Utils.parse_nested_query(query_string) if any_deep_object?
       parameters.each_with_object({}) do |parameter, result|
         if parameter.deep_object?
-          parsed_nested_query = Rack::Utils.parse_nested_query(query_string)
           next unless parsed_nested_query.key?(parameter.name)
 
-          value = handle_deep_object_arrays(parameter, query_string, parsed_nested_query[parameter.name])
+          value = if parameter.explode?
+                    handle_deep_object_explode(parameter, parsed_nested_query[parameter.name], parsed_query)
+                  else
+                    parsed_nested_query[parameter.name]
+                  end
         else
           next unless parsed_query.key?(parameter.name)
 
@@ -40,6 +45,10 @@ module OpenapiParameters
 
     private
 
+    def any_deep_object?
+      @any_deep_object
+    end
+
     def parse_query(query_string)
       Rack::Utils.parse_query(query_string) do |s|
         Rack::Utils.unescape(s)
@@ -48,33 +57,31 @@ module OpenapiParameters
       end
     end
 
-    # Handles deepObject array properties based on explode?
-    def handle_deep_object_arrays(parameter, query_string, value) # rubocop:disable Metrics/AbcSize
+    def handle_deep_object_explode(parameter, value, parsed_query)
       return value unless value.is_a?(Hash)
 
       schema_props = parameter.schema['properties'] || {}
 
-      array_prop_values = find_prop_matches(parameter, query_string, schema_props)
+      array_prop_values = find_prop_matches(parameter.name, schema_props, parsed_query)
 
-      schema_props.each_with_object(value.dup) do |(prop, prop_schema), result|
+      schema_props.each_with_object(value) do |(prop, prop_schema), result|
         next unless prop_schema['type'] == 'array'
 
         arr = array_prop_values[prop]
         result[prop] = if arr.empty? && value.key?(prop)
-                         value[prop].is_a?(Array) ? value[prop] : [value[prop]].compact
+                         Array(value[prop])
                        else
-                         parameter.explode? ? arr : arr.last
+                         arr
                        end
       end
     end
 
-    def find_prop_matches(parameter, query_string, schema_props)
-      prop_matches = {}
-      schema_props.each_key do |prop|
-        matches = query_string.scan(/#{Regexp.escape(parameter.name)}\[#{Regexp.escape(prop)}\]=([^&]*)/)
-        prop_matches[prop] = matches.map { |m| Rack::Utils.unescape(m[0]) }
+    def find_prop_matches(parameter_name, schema_props, parsed_query)
+      schema_props.each_key.with_object({}) do |prop, result|
+        key = "#{parameter_name}[#{prop}]"
+        value = Array(parsed_query[key])
+        result[prop] = value.map { |match| Rack::Utils.unescape(match) } if value.is_a?(Array)
       end
-      prop_matches
     end
   end
 end
