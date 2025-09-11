@@ -11,7 +11,8 @@ RSpec.describe OpenapiParameters::Query do
                                                                              'query_string', 'unpacked_value')
       it description do
         options = test['options'].to_h.transform_keys!(&:to_sym)
-        value = described_class.new([parameter], **options).unpack(query_string)
+        parameter = [parameter] unless parameter.is_a?(Array)
+        value = described_class.new(parameter, **options).unpack(query_string)
         expect(value).to eq(unpacked_value)
       end
     end
