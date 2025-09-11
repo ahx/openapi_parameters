@@ -218,7 +218,7 @@
       type: array
       items:
         type: string
-  query_string: 'names%5B%5D=a&names%5B%5D=b&names%5B%5D=c'
+  query_string: "names%5B%5D=a&names%5B%5D=b&names%5B%5D=c"
   unpacked_value:
     names[]: [a, b, c]
 
@@ -233,7 +233,7 @@
   options:
     rack_array_compat: true
   unpacked_value:
-    ids: ['1', '2']
+    ids: ["1", "2"]
 
 - description: Works with filter[id] pattern
   parameter:
@@ -431,7 +431,7 @@
     color:
       R: 100
 
-- description: Does not convert single value in nested array
+- description: Converts single value in nested array
   parameter:
     in: query
     name: color
@@ -447,13 +447,30 @@
   query_string: color[values]=100
   unpacked_value:
     color:
-      values: "100"
+      values: [100]
 
-- description: Does not convert exploded multiple values
+- description: Converts exploded multiple values
   parameter:
     in: query
     name: color
     explode: true
+    style: deepObject
+    schema:
+      type: object
+      properties:
+        values:
+          type: array
+          items:
+            type: integer
+  query_string: color[values]=100&color[values]=255
+  unpacked_value:
+    color:
+      values: [100, 255]
+
+- description: Does not convert non-exploded nested arrays
+  parameter:
+    in: query
+    name: color
     style: deepObject
     schema:
       type: object
@@ -483,7 +500,7 @@
   query_string: color[values]=100,255
   unpacked_value:
     color:
-      values: "100,255"
+      values: ["100,255"]
 
 - description: Supports form style with explode false
   parameter:
