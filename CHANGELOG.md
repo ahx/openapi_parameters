@@ -2,7 +2,7 @@
 
 ## [0.7.0] - 2025-09-12
 
-- Correctly handle `explode: true` and parse into array
+- Correctly handle `style:deepObject` with `explode: true` and parse into array
   ```ruby
   OpenapiParameters::Query.new(
       [parameter],
