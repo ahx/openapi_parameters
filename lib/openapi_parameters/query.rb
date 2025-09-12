@@ -35,24 +35,6 @@ module OpenapiParameters
       end
     end
 
-    # Handles deepObject array properties based on explode?
-    def handle_deep_object_arrays(parameter, query_string, value) # rubocop:disable Metrics/AbcSize
-      return value unless value.is_a?(Hash)
-
-      schema_props = parameter.schema['properties'] || {}
-      schema_props.each_with_object(value.dup) do |(prop, prop_schema), result|
-        next unless prop_schema['type'] == 'array'
-
-        matches = query_string.scan(/#{Regexp.escape(parameter.name)}\[#{Regexp.escape(prop)}\]=([^&]*)/)
-        arr = matches.map { |m| Rack::Utils.unescape(m[0]) }
-        result[prop] = if arr.empty? && value.key?(prop)
-                         value[prop].is_a?(Array) ? value[prop] : [value[prop]].compact
-                       else
-                         parameter.explode? ? arr : arr.last
-                       end
-      end
-    end
-
     attr_reader :parameters
     private attr_reader :remove_array_brackets
 
@@ -64,6 +46,35 @@ module OpenapiParameters
       rescue ArgumentError => e
         raise Rack::Utils::InvalidParameterError, e.message
       end
+    end
+
+    # Handles deepObject array properties based on explode?
+    def handle_deep_object_arrays(parameter, query_string, value) # rubocop:disable Metrics/AbcSize
+      return value unless value.is_a?(Hash)
+
+      schema_props = parameter.schema['properties'] || {}
+
+      array_prop_values = find_prop_matches(parameter, query_string, schema_props)
+
+      schema_props.each_with_object(value.dup) do |(prop, prop_schema), result|
+        next unless prop_schema['type'] == 'array'
+
+        arr = array_prop_values[prop]
+        result[prop] = if arr.empty? && value.key?(prop)
+                         value[prop].is_a?(Array) ? value[prop] : [value[prop]].compact
+                       else
+                         parameter.explode? ? arr : arr.last
+                       end
+      end
+    end
+
+    def find_prop_matches(parameter, query_string, schema_props)
+      prop_matches = {}
+      schema_props.each_key do |prop|
+        matches = query_string.scan(/#{Regexp.escape(parameter.name)}\[#{Regexp.escape(prop)}\]=([^&]*)/)
+        prop_matches[prop] = matches.map { |m| Rack::Utils.unescape(m[0]) }
+      end
+      prop_matches
     end
   end
 end
