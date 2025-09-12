@@ -1,8 +1,19 @@
 ## [Unreleased]
 
+## [0.7.0] - 2025-09-12
+
+- Correctly handle `style:deepObject` with `explode: true` and parse into array
+  ```ruby
+  OpenapiParameters::Query.new(
+      [parameter],
+      explode: true
+  ).unpack('ids=1&ids=2')
+  # => { 'ids' => ['1', '2'] }
+  ```
+
 ## [0.6.1] - 2025-06-23
 
-- Fix converting items of array paramters
+- Fix converting items of array parameters
 
 ## [0.6.0] - 2025-06-23
 

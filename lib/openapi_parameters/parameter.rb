@@ -9,6 +9,7 @@ module OpenapiParameters
       @definition = definition
       @name = definition['name']
       @is_deep_object = style == 'deepObject'
+      @is_explode = explode?
       @converter = Converters[schema]
       check_supported!
     end
