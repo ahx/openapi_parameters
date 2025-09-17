@@ -68,7 +68,7 @@
   unpacked_value:
     id: abc
 
-- description: Does not add key if not set
+- description: Does not add key if query string is empty
   parameter:
     in: query
     name: id
@@ -330,11 +330,6 @@
           type: integer
         B:
           type: integer
-        nested:
-          type: object
-          properties:
-            a:
-              type: integer
   query_string: color[R]=100&color[G]=200&color[B]=150
   unpacked_value:
     color:
@@ -342,7 +337,7 @@
       G: 200
       B: 150
 
-- description: Returns the original value if unpacking fails
+- description: Returns an empty object if unpacking fails
   parameter:
     in: query
     name: color
@@ -353,18 +348,8 @@
       properties:
         R:
           type: integer
-        G:
-          type: integer
-        B:
-          type: integer
-        nested:
-          type: object
-          properties:
-            a:
-              type: integer
   query_string: color=RGB
-  unpacked_value:
-    color: RGB
+  unpacked_value: {}
 
 - description: Does not add key if not set
   parameter:
@@ -389,11 +374,10 @@
   query_string: ""
   unpacked_value: {}
 
-- description: Supports nested objects
+- description: Ignores nested objects
   parameter:
     in: query
     name: color
-    explode: true
     style: deepObject
     schema:
       type: object
@@ -413,14 +397,11 @@
   unpacked_value:
     color:
       R: 100
-      nested:
-        a: 42
 
 - description: Still returns an object without object type specified
   parameter:
     in: query
     name: color
-    explode: true
     style: deepObject
     schema:
       properties:
@@ -449,7 +430,7 @@
     color:
       values: [100]
 
-- description: Converts exploded multiple values
+- description: Converts multiple values in nested array
   parameter:
     in: query
     name: color
@@ -467,7 +448,49 @@
     color:
       values: [100, 255]
 
-- description: Does not convert non-exploded nested arrays
+- description: Does does not add rack-style parameters unless described
+  parameter:
+    in: query
+    name: color
+    explode: true
+    style: deepObject
+    schema:
+      type: object
+      properties:
+        values:
+          type: array
+          items:
+            type: integer
+  query_string: color[values][]=100&color[values][]=255
+  unpacked_value: {}
+
+- description: Unpacks rack-style array values if they are described alongside other deepObjects
+  parameter:
+    - in: query
+      name: filter
+      explode: true
+      style: deepObject
+      schema:
+        type: object
+        properties:
+          id:
+            type: array
+            items:
+              type: integer
+    - in: query
+      name: color[values][]
+      explode: true
+      schema:
+        type: array
+        items:
+          type: integer
+  query_string: color[values][]=100&color[values][]=255&filter[id]=200
+  unpacked_value:
+    filter:
+      id: [200]
+    'color[values][]': [100, 255]
+
+- description: Converts non-exploded nested arrays
   parameter:
     in: query
     name: color
@@ -482,7 +505,7 @@
   query_string: color[values]=100&color[values]=255
   unpacked_value:
     color:
-      values: "255"
+      values: [255]
 
 - description: Does not convert comma-separated values
   parameter:

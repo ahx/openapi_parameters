@@ -14,18 +14,12 @@ module OpenapiParameters
       @any_deep_object = @parameters.any?(&:deep_object?)
     end
 
-    def unpack(query_string) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
+    def unpack(query_string) # rubocop:disable Metrics/AbcSize
       parsed_query = parse_query(query_string)
-      parsed_nested_query = Rack::Utils.parse_nested_query(query_string) if any_deep_object?
       parameters.each_with_object({}) do |parameter, result|
         if parameter.deep_object?
-          next unless parsed_nested_query.key?(parameter.name)
-
-          value = if parameter.explode?
-                    handle_deep_object_explode(parameter, parsed_nested_query[parameter.name], parsed_query)
-                  else
-                    parsed_nested_query[parameter.name]
-                  end
+          value = parse_deep_object(parameter, parsed_query)
+          next if value.empty?
         else
           next unless parsed_query.key?(parameter.name)
 
@@ -57,31 +51,27 @@ module OpenapiParameters
       end
     end
 
-    def handle_deep_object_explode(parameter, value, parsed_query)
-      return value unless value.is_a?(Hash)
-
+    def parse_deep_object(parameter, parsed_query)
       schema_props = parameter.schema['properties'] || {}
+      name = parameter.name
+      schema_props.each.with_object({}) do |(prop, schema), result|
+        key = "#{name}[#{prop}]"
+        next unless parsed_query.key?(key)
 
-      array_prop_values = find_prop_matches(parameter.name, schema_props, parsed_query)
-
-      schema_props.each_with_object(value) do |(prop, prop_schema), result|
-        next unless prop_schema['type'] == 'array'
-
-        arr = array_prop_values[prop]
-        result[prop] = if arr.empty? && value.key?(prop)
-                         Array(value[prop])
-                       else
-                         arr
-                       end
+        value = explode_value(parsed_query[key], parameter, schema)
+        result[prop] = value
       end
     end
 
-    def find_prop_matches(parameter_name, schema_props, parsed_query)
-      schema_props.each_key.with_object({}) do |prop, result|
-        key = "#{parameter_name}[#{prop}]"
-        value = Array(parsed_query[key])
-        result[prop] = value.map { |match| Rack::Utils.unescape(match) } if value.is_a?(Array)
+    def explode_value(value, parameter, schema)
+      type = schema['type']
+      value = Array(value).map! { |v| Rack::Utils.unescape(v) }
+      if type == 'array'
+        return value if parameter.explode?
+
+        return [value.last]
       end
+      value.last
     end
   end
 end

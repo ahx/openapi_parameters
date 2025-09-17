@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.8.0] - 2025-09-17
+
+- No longer parse more than one level of nested objects when parsing `deepObject` parameters. This is actually in line with what `deepObject` supports.
+
 ## [0.7.0] - 2025-09-12
 
 - Correctly handle `style:deepObject` with `explode: true` and parse into array
