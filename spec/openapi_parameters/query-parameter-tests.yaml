@@ -46,6 +46,26 @@
   unpacked_value:
     id: 1
 
+- description: Converts 'true'
+  parameter:
+    in: query
+    name: bool
+    schema:
+      type: boolean
+  query_string: bool=true
+  unpacked_value:
+    bool: true
+
+- description: Converts 'false'
+  parameter:
+    in: query
+    name: bool
+    schema:
+      type: boolean
+  query_string: bool=false
+  unpacked_value:
+    bool: false
+
 - description: Accepts convert false option
   parameter:
     in: query
