@@ -46,6 +46,26 @@
   unpacked_value:
     id: 1
 
+- description: Converts 'true'
+  parameter:
+    in: query
+    name: bool
+    schema:
+      type: boolean
+  query_string: bool=true
+  unpacked_value:
+    bool: true
+
+- description: Converts 'false'
+  parameter:
+    in: query
+    name: bool
+    schema:
+      type: boolean
+  query_string: bool=false
+  unpacked_value:
+    bool: false
+
 - description: Accepts convert false option
   parameter:
     in: query
@@ -525,6 +545,34 @@
     color:
       values: ["100,255"]
 
+- description: Works with dashes in deepObject property names
+  parameter:
+    in: query
+    name: filter
+    style: deepObject
+    schema:
+      type: object
+      properties:
+        first-name:
+          type: string
+  query_string: filter[first-name]=ada
+  unpacked_value:
+    filter:
+      first-name: ada
+
+- description: Without matching query
+  parameter:
+    in: query
+    name: filter
+    style: deepObject
+    schema:
+      type: object
+      properties:
+        first-name:
+          type: string
+  query_string: some[thing]=ada
+  unpacked_value: {}
+
 - description: Supports form style with explode false
   parameter:
     in: query
@@ -546,3 +594,41 @@
       R: 100
       G: 200
       B: 150
+- description: With deepObject and oneOf
+  parameter:
+    in: query
+    name: filter
+    style: deepObject
+    schema:
+      oneOf:
+      - type: object
+        required:
+          - departement
+        properties:
+          end_date:
+            type: string
+            format: date
+          start_date:
+            type: string
+            format: date
+          departement:
+            type: string
+      - type: object
+        required:
+          - floor
+        properties:
+          end_date:
+            type: string
+            format: date
+          start_date:
+            type: string
+            format: date
+          floor:
+            type: string
+  query_string: 'filter%5Bend_date%5D=2025-02-01&filter%5Bdepartment%5D=paper&filter%5Bstart_date%5D=2025-01-01&filter%5Bfloor%5D=1'
+  unpacked_value:
+    filter:
+      department: paper
+      end_date: '2025-02-01'
+      start_date: '2025-01-01'
+      floor: '1'

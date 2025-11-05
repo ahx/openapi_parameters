@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Add basic support unpacking query paramters that use deepObject and oneOf
+
 ## [0.8.0] - 2025-09-17
 
 - No longer parse more than one level of nested objects when parsing `deepObject` parameters. This is actually in line with what `deepObject` supports.
