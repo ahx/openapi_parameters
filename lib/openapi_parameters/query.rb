@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rack'
+require_relative 'converter'
 
 module OpenapiParameters
   # Query parses query parameters from a http query strings.
@@ -11,7 +12,6 @@ module OpenapiParameters
       @parameters = parameters.map { Parameter.new(_1) }
       @convert = convert
       @remove_array_brackets = rack_array_compat
-      @any_deep_object = @parameters.any?(&:deep_object?)
     end
 
     def unpack(query_string) # rubocop:disable Metrics/AbcSize
@@ -35,13 +35,9 @@ module OpenapiParameters
     end
 
     attr_reader :parameters
-    private attr_reader :remove_array_brackets
+    private attr_reader :remove_array_brackets, :parameter_property_schemas
 
     private
-
-    def any_deep_object?
-      @any_deep_object
-    end
 
     def parse_query(query_string)
       Rack::Utils.parse_query(query_string) do |s|
@@ -51,22 +47,43 @@ module OpenapiParameters
       end
     end
 
+    def build_properties_schema(parameter)
+      schema = parameter.schema
+      return unless schema
+
+      props = schema['properties']
+      return props if props
+
+      combinations = schema.slice('allOf', 'oneOf', 'anyOf')
+      if combinations.any?
+        props = combinations.values.flat_map { |value| value.map { |sub| sub['properties'] }.compact }
+        return {}.merge(*props.compact)
+      end
+
+      schema
+    end
+
+    DEEP_PROP = '\[([\w-]+)\]$'
+    private_constant :DEEP_PROP
+
     def parse_deep_object(parameter, parsed_query)
-      schema_props = parameter.schema['properties'] || {}
       name = parameter.name
-      schema_props.each.with_object({}) do |(prop, schema), result|
-        key = "#{name}[#{prop}]"
+      prop_regx = /^#{name}#{DEEP_PROP}/
+      parsed_query.each.with_object({}) do |(key, value), result|
         next unless parsed_query.key?(key)
 
-        value = explode_value(parsed_query[key], parameter, schema)
-        result[prop] = value
+        prop_key = key.match(prop_regx)&.[](1)
+        next if prop_key.nil?
+
+        is_array = parameter.schema&.dig('properties', prop_key, 'type') == 'array'
+        value = explode_value(value, parameter, is_array)
+        result[prop_key] = value
       end
     end
 
-    def explode_value(value, parameter, schema)
-      type = schema['type']
+    def explode_value(value, parameter, is_array)
       value = Array(value).map! { |v| Rack::Utils.unescape(v) }
-      if type == 'array'
+      if is_array
         return value if parameter.explode?
 
         return [value.last]
