@@ -49,18 +49,7 @@ module OpenapiParameters
 
     def build_properties_schema(parameter)
       schema = parameter.schema
-      return unless schema
-
-      props = schema['properties']
-      return props if props
-
-      combinations = schema.slice('allOf', 'oneOf', 'anyOf')
-      if combinations.any?
-        props = combinations.values.flat_map { |value| value.map { |sub| sub['properties'] }.compact }
-        return {}.merge(*props.compact)
-      end
-
-      schema
+      ObjectConverter.get_properties(schema) if schema
     end
 
     DEEP_PROP = '\[([\w-]+)\]$'
@@ -69,13 +58,15 @@ module OpenapiParameters
     def parse_deep_object(parameter, parsed_query)
       name = parameter.name
       prop_regx = /^#{name}#{DEEP_PROP}/
+      properties_schema = build_properties_schema(parameter)
+
       parsed_query.each.with_object({}) do |(key, value), result|
         next unless parsed_query.key?(key)
 
         prop_key = key.match(prop_regx)&.[](1)
         next if prop_key.nil?
 
-        is_array = parameter.schema&.dig('properties', prop_key, 'type') == 'array'
+        is_array = properties_schema&.dig(prop_key, 'type') == 'array'
         value = explode_value(value, parameter, is_array)
         result[prop_key] = value
       end

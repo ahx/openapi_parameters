@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'array_converter'
+require_relative 'object_converter'
 
 module OpenapiParameters
   # Tries to convert a request parameter value (string) to the type specified in the JSON Schema.
@@ -33,23 +34,15 @@ module OpenapiParameters
             value == 'false' ? false : value
           end
         when 'object'
-          convert_object(value, schema)
+          ObjectConverter.new(schema).call(value)
         when 'array'
           ArrayConverter.new(schema).call(value)
         else
-          if schema['properties']
-            convert_object(value, schema)
+          if schema['properties'] || schema['oneOf'] || schema['allOf'] || schema['anyOf']
+            ObjectConverter.new(schema).call(value)
           else
             value
           end
-        end
-      end
-
-      def convert_object(value, schema)
-        return value unless value.is_a?(Hash)
-
-        value.each_with_object({}) do |(key, val), hsh|
-          hsh[key] = Converter.convert(val, schema['properties']&.fetch(key, nil))
         end
       end
 
