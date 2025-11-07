@@ -2,7 +2,7 @@
 
 module OpenapiParameters
   # @visibility private
-  class ObjectConverter < Data.define(:schema)
+  ObjectConverter = Data.define(:schema) do
     def self.get_properties(schema)
       direct_props = schema['properties'] || {}
 
@@ -18,7 +18,7 @@ module OpenapiParameters
     def call(value)
       return value unless value.is_a?(Hash)
 
-      properties = ObjectConverter.get_properties(schema)
+      properties = self.class.get_properties(schema)
 
       value.each_with_object({}) do |(key, val), hsh|
         hsh[key] = Converter.convert(val, properties&.fetch(key, nil))
