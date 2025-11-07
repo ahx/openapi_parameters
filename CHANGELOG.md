@@ -1,6 +1,6 @@
 ## [Unreleased]
 
-- Add basic support for unpacking query parameters that use deepObject and oneOf,andOf,anyOf,if-them-else
+- Add support for unpacking query parameters that use deepObject and oneOf,andOf,anyOf,if-them-else
 
 ## [0.8.0] - 2025-09-17
 
