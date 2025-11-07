@@ -5,7 +5,6 @@ RSpec.describe OpenapiParameters::Converter do
     described_class.convert(value, schema)
   end
 
-  # Shared examples for basic type conversions
   shared_examples 'converts primitive types' do |type, valid_input, expected_output, invalid_input = 'invalid'|
     context "with #{type} type" do
       let(:schema) { { 'type' => type } }
@@ -26,7 +25,6 @@ RSpec.describe OpenapiParameters::Converter do
     end
   end
 
-  # Basic conversion tests
   it_behaves_like 'preserves input when no conversion needed', '123', nil
   it_behaves_like 'preserves input when no conversion needed', '1', {}
   it_behaves_like 'preserves input when no conversion needed', nil, { 'type' => 'integer' }
@@ -68,7 +66,6 @@ RSpec.describe OpenapiParameters::Converter do
     expect(convert('2020-09-15', schema)).to eq('2020-09-15')
   end
 
-  # Object conversion tests
   context 'with object schemas' do
     let(:simple_object_schema) do
       {
@@ -121,7 +118,6 @@ RSpec.describe OpenapiParameters::Converter do
     end
   end
 
-  # Array conversion tests
   context 'with array schemas' do
     let(:simple_array_schema) { { 'type' => 'array', 'items' => { 'type' => 'integer' } } }
     let(:prefix_items_schema) do
@@ -169,7 +165,6 @@ RSpec.describe OpenapiParameters::Converter do
     end
   end
 
-  # Complex nested structures
   it 'converts complex nested structures' do
     schema = {
       'type' => 'object',
@@ -194,7 +189,6 @@ RSpec.describe OpenapiParameters::Converter do
     expect(convert(input, schema)).to eq(expected)
   end
 
-  # Composition schema tests
   context 'with composition schemas' do
     shared_examples 'composition schema conversion' do |composition_key|
       it "converts properties from #{composition_key} branches" do

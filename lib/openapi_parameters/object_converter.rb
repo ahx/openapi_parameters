@@ -3,16 +3,43 @@
 module OpenapiParameters
   # @visibility private
   ObjectConverter = Data.define(:schema) do
-    def self.get_properties(schema)
-      direct_props = schema['properties'] || {}
+    def self.get_properties(schema) # rubocop:disable Metrics
+      return nil if schema.nil? || schema.empty?
 
-      combinations = schema.slice('allOf', 'oneOf', 'anyOf')
-      if combinations.any?
-        composition_props = combinations.values.flat_map { |value| value.map { |sub| sub['properties'] }.compact }
-        return direct_props.merge({}.merge(*composition_props.compact)) unless composition_props.empty?
+      direct_props = schema['properties']
+      additional_props = schema['additionalProperties']
+
+      composition_props = []
+
+      %w[allOf oneOf anyOf].each do |keyword|
+        next unless (array = schema[keyword])
+
+        array.each do |sub_schema|
+          if (props = sub_schema['properties'])
+            composition_props << props
+          end
+        end
       end
 
-      direct_props.empty? ? nil : direct_props
+      %w[then else].each do |keyword|
+        next unless (sub_schema = schema[keyword])
+
+        if (props = sub_schema['properties'])
+          composition_props << props
+        end
+        if (add_props = sub_schema['additionalProperties']) && add_props.is_a?(Hash) && !add_props.empty?
+          composition_props << add_props
+        end
+      end
+
+      composition_props << additional_props if additional_props.is_a?(Hash) && !additional_props.empty?
+
+      return direct_props if composition_props.empty? && direct_props
+      return nil if direct_props.nil? && composition_props.empty?
+
+      result = direct_props ? direct_props.dup : {}
+      composition_props.each { |props| result.merge!(props) }
+      result
     end
 
     def call(value)
