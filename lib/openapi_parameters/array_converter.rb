@@ -2,13 +2,7 @@
 
 module OpenapiParameters
   # @visibility private
-  class ArrayConverter
-    def initialize(schema)
-      @schema = schema
-    end
-
-    attr_reader :schema
-
+  ArrayConverter = Data.define(:schema) do
     def call(value)
       return [] if value.nil? || value.empty?
 

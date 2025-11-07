@@ -632,3 +632,25 @@
       end_date: '2025-02-01'
       start_date: '2025-01-01'
       floor: '1'
+- description: Convert deepObject properties with oneOf
+  parameter:
+    in: query
+    name: filter
+    style: deepObject
+    schema:
+      oneOf:
+      - type: object
+        properties:
+          dep:
+            type: string
+      - type: object
+        required:
+          - floor
+        properties:
+          floor:
+            type: integer
+  query_string: 'filter[dep]=paper&filter[floor]=1'
+  unpacked_value:
+    filter:
+      dep: paper
+      floor: 1
