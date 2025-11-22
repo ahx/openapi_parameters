@@ -13,7 +13,8 @@ module OpenapiParameters
       check_supported!
     end
 
-    attr_reader :definition, :name
+    attr_reader :name
+    private attr_reader :definition
 
     def convert(value)
       @converter.call(value)
