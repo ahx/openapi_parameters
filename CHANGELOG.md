@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Add `OpenapiParameters::Query#unknown_values` to find unknown query parameters 
+
 ## [0.9.0] - 2025-11-07
 
 - Add support for unpacking query parameters that use deepObject and oneOf,andOf,anyOf,if-them-else

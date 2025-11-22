@@ -654,3 +654,67 @@
     filter:
       dep: paper
       floor: 1
+
+- description: Returns unknown values
+  parameter:
+    in: query
+    name: id
+  query_string: id=abc&unknown=value
+  unknown_values:
+    unknown: value
+
+- description: Returns unknown exploded values
+  parameter:
+    in: query
+    name: id
+  query_string: id=abc&unknown=value&unknown=value
+  unknown_values:
+    unknown: [value, value]
+
+- description: Returns unknown values with deepObject parameters
+  parameter:
+    in: query
+    name: filter
+    style: deepObject
+    schema:
+      type: object
+      properties:
+        name:
+          type: string
+  query_string: filter[name]=ada&unknown=value
+  unpacked_value:
+    filter:
+      name: ada
+  unknown_values:
+    unknown: value
+
+- description: Returns unknown deepObject like values
+  parameter:
+    in: query
+    name: filter
+    style: deepObject
+    schema:
+      type: object
+      properties:
+        name:
+          type: string
+  query_string: filter[name]=ada&unknown[name]=value
+  unpacked_value:
+    filter:
+      name: ada
+  unknown_values:
+    unknown[name]: value
+
+- description: Returns unknown deepObject like values
+  parameter:
+    in: query
+    name: ids[]
+    schema:
+      type: array
+      items:
+        type: integer
+  query_string: ids[]=1&ids[]=2&unknown=value
+  unpacked_value:
+    ids[]: [1, 2]
+  unknown_values:
+    unknown: value

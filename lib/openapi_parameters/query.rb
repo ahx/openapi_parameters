@@ -34,6 +34,21 @@ module OpenapiParameters
       end
     end
 
+    def unknown_values(query_string)
+      parsed_query = parse_query(query_string)
+      known_parameter_names = parameters.to_set(&:name)
+
+      parsed_query.each_with_object({}) do |(key, value), result|
+        # Skip parameters that are defined in the schema
+        next if known_parameter_names.include?(key)
+
+        # Skip deep object parameters that might belong to defined parameters
+        next if parameters.any? { |param| param.deep_object? && key.start_with?("#{param.name}[") }
+
+        result[key] = value
+      end
+    end
+
     attr_reader :parameters
     private attr_reader :remove_array_brackets, :parameter_property_schemas
 

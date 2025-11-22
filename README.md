@@ -28,6 +28,10 @@ query_parameters = OpenapiParameters::Query.new([{
 query_string = env['QUERY_STRING'] # => 'ids=1&ids=2'
 query_parameters.unpack(query_string) # => { 'ids' => [1, 2] }
 
+# Find unknown query parameters
+# Note that this does only return unknown top-level values 
+query_parameters.unknown_values('ids=1&ids=2&foo=bar') # => { 'foo' => 'bar' }
+
 path_parameters = OpenapiParameters::Path.new(parameters)
 route_params = env['route.params'] # This depends on the webframework you are using
 path_parameters.unpack(route_params) # => { 'ids' => [1, 2, 3] }
