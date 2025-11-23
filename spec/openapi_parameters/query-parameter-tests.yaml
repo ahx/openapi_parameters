@@ -663,6 +663,13 @@
   unknown_values:
     unknown: value
 
+- description: Returns no unknown values
+  parameter:
+    in: query
+    name: id
+  query_string: id=abc
+  unknown_values: null
+
 - description: Returns unknown exploded values
   parameter:
     in: query

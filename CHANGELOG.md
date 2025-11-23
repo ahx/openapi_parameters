@@ -1,6 +1,8 @@
 ## [Unreleased]
 
-- remove `OpenapiParameters::Parameter#definition` to clean
+## [0.10.0] - 2025-11-23
+
+- remove `OpenapiParameters::Parameter#definition` to clean up interface
 - Add `OpenapiParameters::Query#unknown_values` to find unknown query parameters
 
 ## [0.9.0] - 2025-11-07

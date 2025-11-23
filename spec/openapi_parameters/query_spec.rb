@@ -7,8 +7,8 @@ RSpec.describe OpenapiParameters::Query do
 
   describe '#unpack' do
     tests.each do |test|
-      description, parameter, query_string, unpacked_value, unknown_values = test.values_at('description', 'parameter',
-                                                                             'query_string', 'unpacked_value', 'unknown_values')
+      description, parameter, query_string, unpacked_value = test.values_at('description', 'parameter',
+                                                                            'query_string', 'unpacked_value')
       if unpacked_value
         it description do
           options = test['options'].to_h.transform_keys!(&:to_sym)
@@ -18,8 +18,9 @@ RSpec.describe OpenapiParameters::Query do
         end
       end
 
-      next unless unknown_values
+      next unless test.key?('unknown_values')
 
+      unknown_values = test['unknown_values']
       it "#{'Unknown values ' if unpacked_value}#{description}" do
         options = test['options'].to_h.transform_keys!(&:to_sym)
         parameter = [parameter] unless parameter.is_a?(Array)

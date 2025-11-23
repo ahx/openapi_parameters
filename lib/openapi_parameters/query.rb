@@ -38,7 +38,7 @@ module OpenapiParameters
       parsed_query = parse_query(query_string)
       known_parameter_names = parameters.to_set(&:name)
 
-      parsed_query.each_with_object({}) do |(key, value), result|
+      unknown = parsed_query.each_with_object({}) do |(key, value), result|
         # Skip parameters that are defined in the schema
         next if known_parameter_names.include?(key)
 
@@ -47,6 +47,9 @@ module OpenapiParameters
 
         result[key] = value
       end
+      return if unknown.empty?
+
+      unknown
     end
 
     attr_reader :parameters
