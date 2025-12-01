@@ -337,39 +337,48 @@
 
 - description: Returns an object with deep object style
   parameter:
-    in: query
-    name: color
-    explode: true
-    style: deepObject
-    schema:
-      type: object
-      properties:
-        R:
-          type: integer
-        G:
-          type: integer
-        B:
-          type: integer
-  query_string: color[R]=100&color[G]=200&color[B]=150
+    - in: query
+      name: color
+      explode: true
+      style: deepObject
+      schema:
+        type: object
+        properties:
+          R:
+            type: integer
+          G:
+            type: integer
+          B:
+            type: integer
+    - in: query
+      name: name
+      schema:
+        type: string
+  query_string: color[R]=100&color[G]=200&color[B]=150&name=ada
   unpacked_value:
     color:
       R: 100
       G: 200
       B: 150
+    name: ada
 
-- description: Returns an empty object if unpacking fails
+- description: Returns the plain query parameter value if it does not look like deepObject
   parameter:
-    in: query
-    name: color
-    explode: true
-    style: deepObject
-    schema:
-      type: object
-      properties:
-        R:
-          type: integer
-  query_string: color=RGB
-  unpacked_value: {}
+    - in: query
+      name: color
+      explode: true
+      style: deepObject
+      schema:
+        type: object
+        properties:
+          R:
+            type: integer
+    - in: query
+      name: name
+      schema:
+        type: string
+  query_string: color=RGB&name=ada
+  unpacked_value: { color: 'RGB', name: 'ada' }
 
 - description: Does not add key if not set
   parameter:

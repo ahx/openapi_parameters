@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.11.0] - 2025-11-30
+
+- Changed:  Passing a plain query string like `filter=ada` to a`deepObject` parameter instead of using the brackets syntax `filter[name]=ada` no longer results in an empty object, but in the plain string value (like `{ filter: 'ada'} `), which will make request validation fail.
+
 ## [0.10.0] - 2025-11-23
 
 - remove `OpenapiParameters::Parameter#definition` to clean up interface

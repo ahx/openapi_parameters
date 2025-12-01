@@ -18,8 +18,12 @@ module OpenapiParameters
       parsed_query = parse_query(query_string)
       parameters.each_with_object({}) do |parameter, result|
         if parameter.deep_object?
-          value = parse_deep_object(parameter, parsed_query)
-          next if value.empty?
+          if parsed_query.key?(parameter.name)
+            value = parsed_query[parameter.name]
+          else
+            value = parse_deep_object(parameter, parsed_query)
+            next if value.empty?
+          end
         else
           next unless parsed_query.key?(parameter.name)
 
