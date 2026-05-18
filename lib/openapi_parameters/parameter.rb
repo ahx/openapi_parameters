@@ -11,10 +11,17 @@ module OpenapiParameters
       @is_deep_object = style == 'deepObject'
       @converter = Converters[schema]
       check_supported!
+      @unpacker = Unpackers.find(self)
     end
 
     attr_reader :name
-    private attr_reader :definition
+    private attr_reader :definition, :unpacker
+
+    def unpack(value)
+      return value if value.nil?
+
+      unpacker.call(value)
+    end
 
     def convert(value)
       @converter.call(value)

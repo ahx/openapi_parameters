@@ -14,7 +14,7 @@ module OpenapiParameters
       @remove_array_brackets = rack_array_compat
     end
 
-    def unpack(query_string) # rubocop:disable Metrics/AbcSize
+    def unpack(query_string) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       parsed_query = parse_query(query_string)
       parameters.each_with_object({}) do |parameter, result|
         if parameter.deep_object?
@@ -27,7 +27,8 @@ module OpenapiParameters
         else
           next unless parsed_query.key?(parameter.name)
 
-          value = Unpacker.unpack_value(parameter, parsed_query[parameter.name])
+          raw = parsed_query[parameter.name]
+          value = catch(:skip) { parameter.unpack(raw) }
         end
         key = if remove_array_brackets && parameter.bracket_array?
                 parameter.name.delete_suffix('[]')

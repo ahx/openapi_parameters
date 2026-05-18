@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+- Add support for parameters defined with a `content` field. Values for media types matching `application/json` or `*+json` are decoded with `JSON.parse` before conversion. Works for query, path, header, and cookie parameters.
+- Add public `OpenapiParameters::ContentParsers` registry with `.register(matcher, parser)` and `.[](media_type)`. Library consumers can register parsers for additional media types; matchers may be exact strings or `Regexp`.
+- Internal: each `Parameter` instance now resolves its unpacker once at construction time and exposes `#unpack(value)`. The private `OpenapiParameters::Unpacker` module is replaced by `OpenapiParameters::Unpackers`, removing per-request dispatch on `style`/`explode`/`location`.
+
 ## [0.11.0] - 2025-11-30
 
 - Changed:  Passing a plain query string like `filter=ada` to a`deepObject` parameter instead of using the brackets syntax `filter[name]=ada` no longer results in an empty object, but in the plain string value (like `{ filter: 'ada'} `), which will make request validation fail.
