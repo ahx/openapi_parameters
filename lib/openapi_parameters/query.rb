@@ -12,9 +12,12 @@ module OpenapiParameters
       @parameters = parameters.map { Parameter.new(_1) }
       @convert = convert
       @remove_array_brackets = rack_array_compat
+      @deep_object_properties = @parameters.each_with_object({}) do |param, hsh|
+        hsh[param.name] = ObjectConverter.get_properties(param.schema) if param.deep_object?
+      end
     end
 
-    def unpack(query_string) # rubocop:disable Metrics/AbcSize
+    def unpack(query_string) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       parsed_query = parse_query(query_string)
       parameters.each_with_object({}) do |parameter, result|
         if parameter.deep_object?
@@ -27,7 +30,8 @@ module OpenapiParameters
         else
           next unless parsed_query.key?(parameter.name)
 
-          value = Unpacker.unpack_value(parameter, parsed_query[parameter.name])
+          raw = parsed_query[parameter.name]
+          value = catch(:skip) { parameter.unpack(raw) }
         end
         key = if remove_array_brackets && parameter.bracket_array?
                 parameter.name.delete_suffix('[]')
@@ -69,18 +73,13 @@ module OpenapiParameters
       end
     end
 
-    def build_properties_schema(parameter)
-      schema = parameter.schema
-      ObjectConverter.get_properties(schema) if schema
-    end
-
     DEEP_PROP = '\[([\w-]+)\]$'
     private_constant :DEEP_PROP
 
     def parse_deep_object(parameter, parsed_query)
       name = parameter.name
       prop_regx = /^#{name}#{DEEP_PROP}/
-      properties_schema = build_properties_schema(parameter)
+      properties_schema = @deep_object_properties[name]
 
       parsed_query.each.with_object({}) do |(key, value), result|
         next unless parsed_query.key?(key)

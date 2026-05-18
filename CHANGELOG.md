@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.12.0] - 2026-05-18
+
+- Add support for parameters defined with a `content` field. Values for media types matching `application/json` or `*+json` are decoded with `JSON.parse` before conversion. Works for query, path, header, and cookie parameters.
+
 ## [0.11.0] - 2025-11-30
 
 - Changed:  Passing a plain query string like `filter=ada` to a`deepObject` parameter instead of using the brackets syntax `filter[name]=ada` no longer results in an empty object, but in the plain string value (like `{ filter: 'ada'} `), which will make request validation fail.

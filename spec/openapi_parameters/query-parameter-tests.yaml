@@ -378,7 +378,7 @@
       schema:
         type: string
   query_string: color=RGB&name=ada
-  unpacked_value: { color: 'RGB', name: 'ada' }
+  unpacked_value: { color: "RGB", name: "ada" }
 
 - description: Does not add key if not set
   parameter:
@@ -517,7 +517,7 @@
   unpacked_value:
     filter:
       id: [200]
-    'color[values][]': [100, 255]
+    "color[values][]": [100, 255]
 
 - description: Converts non-exploded nested arrays
   parameter:
@@ -610,37 +610,37 @@
     style: deepObject
     schema:
       oneOf:
-      - type: object
-        required:
-          - departement
-        properties:
-          end_date:
-            type: string
-            format: date
-          start_date:
-            type: string
-            format: date
-          departement:
-            type: string
-      - type: object
-        required:
-          - floor
-        properties:
-          end_date:
-            type: string
-            format: date
-          start_date:
-            type: string
-            format: date
-          floor:
-            type: string
-  query_string: 'filter%5Bend_date%5D=2025-02-01&filter%5Bdepartment%5D=paper&filter%5Bstart_date%5D=2025-01-01&filter%5Bfloor%5D=1'
+        - type: object
+          required:
+            - departement
+          properties:
+            end_date:
+              type: string
+              format: date
+            start_date:
+              type: string
+              format: date
+            departement:
+              type: string
+        - type: object
+          required:
+            - floor
+          properties:
+            end_date:
+              type: string
+              format: date
+            start_date:
+              type: string
+              format: date
+            floor:
+              type: string
+  query_string: "filter%5Bend_date%5D=2025-02-01&filter%5Bdepartment%5D=paper&filter%5Bstart_date%5D=2025-01-01&filter%5Bfloor%5D=1"
   unpacked_value:
     filter:
       department: paper
-      end_date: '2025-02-01'
-      start_date: '2025-01-01'
-      floor: '1'
+      end_date: "2025-02-01"
+      start_date: "2025-01-01"
+      floor: "1"
 - description: Convert deepObject properties with oneOf
   parameter:
     in: query
@@ -648,17 +648,17 @@
     style: deepObject
     schema:
       oneOf:
-      - type: object
-        properties:
-          dep:
-            type: string
-      - type: object
-        required:
-          - floor
-        properties:
-          floor:
-            type: integer
-  query_string: 'filter[dep]=paper&filter[floor]=1'
+        - type: object
+          properties:
+            dep:
+              type: string
+        - type: object
+          required:
+            - floor
+          properties:
+            floor:
+              type: integer
+  query_string: "filter[dep]=paper&filter[floor]=1"
   unpacked_value:
     filter:
       dep: paper
@@ -734,3 +734,37 @@
     ids[]: [1, 2]
   unknown_values:
     unknown: value
+
+- description: support application/json data via content attribute
+  parameter:
+    name: filters
+    in: query
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            from_date:
+              type: string
+            to_date:
+              type: string
+  query_string: 'filters={"from_date":"2026-05-18","to_date":"2026-05-19"}&ids[]=2&unknown=value'
+  unpacked_value:
+    filters:
+      from_date: "2026-05-18"
+      to_date: "2026-05-19"
+  unknown_values:
+    "ids[]": "2"
+    unknown: value
+
+- description: content parameter falls through to raw string on invalid JSON
+  parameter:
+    name: filters
+    in: query
+    content:
+      application/json:
+        schema:
+          type: object
+  query_string: filters=not-json
+  unpacked_value:
+    filters: not-json

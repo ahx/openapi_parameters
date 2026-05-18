@@ -20,7 +20,7 @@ module OpenapiParameters
         next unless path_params.key?(parameter.name)
 
         result[parameter.name] = catch :skip do
-          value = Unpacker.unpack_value(parameter, path_params[parameter.name])
+          value = parameter.unpack(path_params[parameter.name])
           @convert ? parameter.convert(value) : value
         end
       end

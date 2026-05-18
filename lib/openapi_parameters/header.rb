@@ -16,7 +16,7 @@ module OpenapiParameters
         next unless headers.key?(parameter.name)
 
         result[parameter.name] = catch :skip do
-          value = Unpacker.unpack_value(parameter, headers[parameter.name])
+          value = parameter.unpack(headers[parameter.name])
           @convert ? parameter.convert(value) : value
         end
       end

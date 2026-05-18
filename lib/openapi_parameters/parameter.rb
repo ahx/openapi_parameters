@@ -11,10 +11,18 @@ module OpenapiParameters
       @is_deep_object = style == 'deepObject'
       @converter = Converters[schema]
       check_supported!
+      @unpacker = Unpackers.find(self)
+      @bracket_array = (array? && @name&.end_with?(EMPTY_BRACKETS)) || false
     end
 
     attr_reader :name
-    private attr_reader :definition
+    private attr_reader :definition, :unpacker
+
+    def unpack(value)
+      return value if value.nil?
+
+      unpacker.call(value)
+    end
 
     def convert(value)
       @converter.call(value)
@@ -57,7 +65,7 @@ module OpenapiParameters
     private_constant :EMPTY_BRACKETS
 
     def bracket_array?
-      @bracket_array ||= array? && name.end_with?(EMPTY_BRACKETS)
+      @bracket_array
     end
 
     def object?
