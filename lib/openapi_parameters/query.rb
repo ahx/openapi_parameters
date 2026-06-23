@@ -94,7 +94,7 @@ module OpenapiParameters
     end
 
     def explode_value(value, parameter, is_array)
-      value = Array(value).map! { |v| Rack::Utils.unescape(v) }
+      value = Array(value)
       if is_array
         return value if parameter.explode?
 
