@@ -12,8 +12,13 @@ module OpenapiParameters
       @parameters = parameters.map { Parameter.new(_1) }
       @convert = convert
       @remove_array_brackets = rack_array_compat
-      @deep_object_properties = @parameters.each_with_object({}) do |param, hsh|
-        hsh[param.name] = ObjectConverter.get_properties(param.schema) if param.deep_object?
+      @deep_object_properties = {}
+      @deep_object_regex = {}
+      @parameters.each do |param|
+        next unless param.deep_object?
+
+        @deep_object_properties[param.name] = ObjectConverter.get_properties(param.schema)
+        @deep_object_regex[param.name] = /^#{Regexp.escape(param.name)}#{DEEP_PROP}/
       end
     end
 
@@ -78,7 +83,7 @@ module OpenapiParameters
 
     def parse_deep_object(parameter, parsed_query)
       name = parameter.name
-      prop_regx = /^#{name}#{DEEP_PROP}/
+      prop_regx = @deep_object_regex[name]
       properties_schema = @deep_object_properties[name]
 
       parsed_query.each.with_object({}) do |(key, value), result|
