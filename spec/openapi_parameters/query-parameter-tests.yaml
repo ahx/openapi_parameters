@@ -362,6 +362,23 @@
       B: 150
     name: ada
 
+- description: Does not double-unescape deepObject values (issue #25)
+  parameter:
+    - in: query
+      name: filter
+      explode: true
+      style: deepObject
+      schema:
+        type: object
+        properties:
+          from:
+            type: string
+            format: date-time
+  query_string: filter[from]=2026-01-01T00%3A00%3A00.000%2B00%3A00
+  unpacked_value:
+    filter:
+      from: "2026-01-01T00:00:00.000+00:00"
+
 - description: Returns the plain query parameter value if it does not look like deepObject
   parameter:
     - in: query
@@ -476,6 +493,45 @@
   unpacked_value:
     color:
       values: [100, 255]
+
+- description: Does not double-unescape exploded deepObject array values (issue #25)
+  parameter:
+    in: query
+    name: filter
+    explode: true
+    style: deepObject
+    schema:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+  query_string: filter[tags]=a%2Bb&filter[tags]=c%20d
+  unpacked_value:
+    filter:
+      tags:
+        - "a+b"
+        - "c d"
+
+- description: Does not double-unescape single-value deepObject array values (issue #25)
+  parameter:
+    in: query
+    name: filter
+    explode: true
+    style: deepObject
+    schema:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+  query_string: filter[tags]=a%2Bb
+  unpacked_value:
+    filter:
+      tags:
+        - "a+b"
 
 - description: Does does not add rack-style parameters unless described
   parameter:

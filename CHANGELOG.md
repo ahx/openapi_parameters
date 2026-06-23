@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+## [0.13.0] - 2026-06-23
+
+- Changed: Require Ruby 3.3 or later
+- Fixed: `deepObject` query parameter values were unescaped twice, corrupting percent-encoded characters (e.g. `%2B` became a space instead of `+`). ([#25](https://github.com/ahx/openapi_parameters/issues/25))
+
 ## [0.12.0] - 2026-05-18
 
 - Add support for parameters defined with a `content` field. Values for media types matching `application/json` or `*+json` are decoded with `JSON.parse` before conversion. Works for query, path, header, and cookie parameters.
