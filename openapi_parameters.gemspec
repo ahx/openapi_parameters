@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description =
     'This parses HTTP query/path/header/cookie parameters exactly as described in an OpenAPI API description.'
   spec.homepage = 'https://github.com/ahx/openapi_parameters'
-  spec.required_ruby_version = '>= 3.2.0'
+  spec.required_ruby_version = '>= 3.3.0'
   spec.licenses = ['MIT']
 
   spec.metadata['homepage_uri'] = spec.homepage
