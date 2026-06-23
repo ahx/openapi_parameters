@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.13.0] - 2026-06-23
+
 - Changed: Require Ruby 3.3 or later
 - Fixed: `deepObject` query parameter values were unescaped twice, corrupting percent-encoded characters (e.g. `%2B` became a space instead of `+`). ([#25](https://github.com/ahx/openapi_parameters/issues/25))
 
