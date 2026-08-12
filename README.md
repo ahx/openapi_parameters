@@ -1,3 +1,6 @@
+> [!NOTE]
+> This rubygem was merged into [openapi_first](https://github.com/ahx/openapi_first) and will no longer be updated. Just contact me if you are using this and want to contribute. 
+
 # openapi_parameters
 
 openapi_parameters is an an [OpenAPI](https://www.openapis.org/) aware parameter parser.
